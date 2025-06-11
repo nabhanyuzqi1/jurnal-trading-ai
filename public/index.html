@@ -825,21 +825,27 @@
         // --- NEWS FEATURE ---
         async function fetchNews() {
             ui.newsList.innerHTML = '<div class="loader"></div>';
-            const CORS_PROXY = "https://corsproxy.io/?";
-            const RSS_URL = "https://www.investing.com/rss/news_285.rss"; // Forex News
+            // FIX: Switched to a more reliable JSON-based RSS proxy
+            const RSS_TO_JSON_API = "https://api.rss2json.com/v1/api.json?rss_url=";
+            const RSS_URL = encodeURIComponent("https://www.investing.com/rss/news_285.rss"); // Forex News
             
             try {
-                const response = await fetch(CORS_PROXY + RSS_URL);
+                const response = await fetch(RSS_TO_JSON_API + RSS_URL);
                 if(!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                const str = await response.text();
-                const data = new window.DOMParser().parseFromString(str, "text/xml");
-                const items = data.querySelectorAll("item");
+                const data = await response.json();
+
+                if (data.status !== 'ok') {
+                    throw new Error('Gagal mengambil data berita dari API.');
+                }
+                
+                const items = data.items;
                 newsCache = [];
                 let html = "";
-                items.forEach(el => {
-                    const title = el.querySelector("title").textContent;
-                    const link = el.querySelector("link").textContent;
-                    const description = el.querySelector("description").textContent.replace(/<[^>]*>?/gm, '');
+                items.forEach(item => {
+                    const title = item.title;
+                    const link = item.link;
+                    // Clean up description from HTML tags
+                    const description = item.description.replace(/<[^>]*>?/gm, '').split('.').slice(0, 2).join('.') + '.';
                     newsCache.push(title);
                     html += `
                         <div class="p-3 border-b border-gray-200">
@@ -850,7 +856,7 @@
                 });
                 ui.newsList.innerHTML = html;
             } catch(error) {
-                ui.newsList.innerHTML = `<p class="text-red-500">Gagal memuat berita. Silakan coba lagi nanti.</p>`;
+                ui.newsList.innerHTML = `<p class="text-red-500">Gagal memuat berita. Sumber data mungkin sedang tidak tersedia. Silakan coba lagi nanti.</p>`;
                 console.error("Error fetching news:", error);
             }
         }
@@ -1040,4 +1046,4 @@
         initializeChart();
     </script>
 </body>
-</html>
+</ht
