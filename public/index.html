@@ -71,7 +71,7 @@
         .nav-item svg { width: 24px; height: 24px; margin-bottom: 0.25rem; }
         .fab {
             position: fixed; bottom: 90px; right: 20px;
-            background-color: #25D366; color: white;
+            background-color: #106cde; color: white;
             width: 60px; height: 60px; border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
             box-shadow: 0 4px 14px rgba(0,0,0,0.25);
@@ -257,6 +257,27 @@
                 </div>
             </div>
         </div>
+        
+        <div id="news-view" class="view hidden">
+            <div class="card">
+                <h2 class="text-2xl font-bold mb-4">Berita & Analisis Pasar AI</h2>
+                <div class="space-y-4 md:flex md:space-y-0 md:space-x-4 md:items-end mb-6">
+                    <div class="flex-grow">
+                        <label for="watched-pairs" class="block text-sm font-medium">Fokus Pair (pisahkan dengan koma)</label>
+                        <input type="text" id="watched-pairs" placeholder="EUR/USD, GBP/JPY, XAU/USD" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <button id="ai-news-btn" class="w-full md:w-auto bg-teal-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-teal-600">Dapatkan Outlook AI</button>
+                </div>
+                <div id="ai-news-result" class="p-4 bg-blue-50 border border-blue-200 rounded-md mb-6 min-h-[50px]">
+                    <p class="text-gray-500">Outlook dari AI akan muncul di sini...</p>
+                </div>
+                <h3 class="text-xl font-bold mb-2">Berita Terbaru dari Myfxbook</h3>
+                <div id="news-list" class="space-y-4 max-h-[400px] overflow-y-auto">
+                    <div class="loader"></div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <!-- Bottom Navigation -->
@@ -269,6 +290,10 @@
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h12A2.25 2.25 0 0020.25 14.25V3.75M3.75 18.75h16.5M12 12.75h.008v.008H12v-.008z" /></svg>
             Analisa
         </button>
+         <button data-view="news-view" class="nav-item">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 01-2.25 2.25M16.5 7.5V18a2.25 2.25 0 002.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 002.25 2.25h13.5M6 7.5h3v3H6v-3z" /></svg>
+            Berita
+        </button>
         <button data-view="akun-view" class="nav-item">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
             Akun
@@ -276,7 +301,7 @@
     </nav>
     
     <!-- Donation FAB -->
-    <button id="fab" class="fab hidden" title="Donasi untuk Nabhan via DANA">
+    <button id="fab" class="fab hidden" title="Donasi untuk Nabhan">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 20 20" fill="currentColor"><path d="M10 3.5a1.5 1.5 0 013 0V4a1 1 0 001 1h1a1 1 0 011 1v3.5a1.5 1.5 0 01-3 0V9.5a.5.5 0 00-.5-.5h-1a.5.5 0 00-.5.5v.5a.5.5 0 01-.5.5h-1a.5.5 0 01-.5-.5v-1a.5.5 0 00-.5-.5H9a.5.5 0 00-.5.5v1a.5.5 0 01-.5.5H7a.5.5 0 01-.5-.5V9.5a.5.5 0 00-.5-.5h-1a.5.5 0 00-.5.5v.5a1.5 1.5 0 01-3 0V6a1 1 0 011-1h1a1 1 0 001-1V3.5z" /><path d="M5.5 11a3.5 3.5 0 11-1 3.337V16.5a.5.5 0 00.5.5h2a.5.5 0 00.5-.5v-2.163A3.5 3.5 0 015.5 11zm9 0a3.5 3.5 0 11-1 3.337V16.5a.5.5 0 00.5.5h2a.5.5 0 00.5-.5v-2.163A3.5 3.5 0 0114.5 11z" /></svg>
     </button>
     
@@ -288,10 +313,12 @@
         <div class="modal-content text-center">
             <span class="modal-close-btn modal-close">&times;</span>
             <h2 class="text-2xl font-bold mb-4">Donasi untuk Kreator</h2>
-            <p class="mb-4 text-gray-600">Terima kasih telah menggunakan aplikasi ini. Dukung Nabhan melalui DANA.</p>
-            <img src="https://placehold.co/300x300/FFFFFF/000000?text=Scan+QR+DANA" alt="QR Code DANA" class="mx-auto rounded-lg shadow-md mb-4" onerror="this.onerror=null;this.src='https://placehold.co/300x300/CCCCCC/FFFFFF?text=QR+Tidak+Tersedia';">
-            <p class="font-semibold">Nabhan Yuzqi Al Mubarok</p>
-            <p class="text-lg font-bold text-blue-600">0859 5020 2227</p>
+            <p class="mb-4 text-gray-600">Terima kasih telah menggunakan aplikasi ini. Dukung Nabhan melalui BCA.</p>
+            <div class="p-4 bg-blue-50 rounded-lg">
+                <p class="font-semibold text-lg">Bank Central Asia (BCA)</p>
+                <p class="text-2xl font-bold text-blue-600 my-2">6695673021</p>
+                <p class="font-semibold">a/n Nabhan Yuzqi Al Mubarok</p>
+            </div>
         </div>
     </div>
         
@@ -303,7 +330,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
         import { getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, query, orderBy, serverTimestamp, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, query, orderBy, serverTimestamp, updateDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // Your web app's Firebase configuration
         const firebaseConfig = {
@@ -315,7 +342,7 @@
             appId: "1:436443442605:web:3dae7a44032d63b0e0c524",
             measurementId: "G-SQ9SZEKKWZ"
         };
-        const geminiApiKey = "";
+        const geminiApiKey = "AIzaSyCXl-bqMtYmp4AuKEdLz1yDl0mzVmVIJXk";
 
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
@@ -330,6 +357,7 @@
         let allTrades = [];
         let tradeListenerUnsubscribe = null;
         let accountListenerUnsubscribe = null;
+        let newsCache = [];
 
         const ui = {
             authScreen: document.getElementById('auth-screen'),
@@ -347,7 +375,10 @@
             accountsList: document.getElementById('accounts-list'),
             tradeForm: document.getElementById('trade-form'),
             pairDataList: document.getElementById('pair-list'),
-            donationModal: document.getElementById('donation-modal')
+            donationModal: document.getElementById('donation-modal'),
+            newsList: document.getElementById('news-list'),
+            aiNewsBtn: document.getElementById('ai-news-btn'),
+            aiNewsResult: document.getElementById('ai-news-result')
         };
         
         function initializeChart() {
@@ -401,6 +432,9 @@
             document.getElementById(viewId).classList.remove('hidden');
             ui.navItems.forEach(item => item.classList.remove('active'));
             navItem.classList.add('active');
+            if(viewId === 'news-view' && newsCache.length === 0) {
+                fetchNews();
+            }
         });
 
         function initAppForUser(user) {
@@ -415,7 +449,7 @@
             if (accountListenerUnsubscribe) accountListenerUnsubscribe();
             accountListenerUnsubscribe = onSnapshot(query(accountsRef, orderBy('name')), snapshot => {
                 allAccounts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                renderAccountsList();
+                renderAccountsList(userId);
                 
                 const storedAccountId = localStorage.getItem(`activeAccountId_${userId}`);
                 const accountExists = allAccounts.some(acc => acc.id === storedAccountId);
@@ -450,7 +484,7 @@
         function setActiveAccount(accountId, userId) {
             activeAccountId = accountId;
             localStorage.setItem(`activeAccountId_${userId}`, accountId);
-            renderAccountsList(); // to highlight the active one
+            renderAccountsList(userId); // to highlight the active one
             const activeAccount = allAccounts.find(acc => acc.id === accountId);
             if(activeAccount) {
                 ui.activeAccountName.textContent = activeAccount.name;
@@ -458,7 +492,26 @@
             }
         }
 
-        function renderAccountsList() {
+        async function deleteAccount(userId, accountId) {
+            if (!confirm(`Apakah Anda yakin ingin menghapus akun ini beserta SEMUA trade di dalamnya? Tindakan ini tidak dapat diurungkan.`)) return;
+
+            const tradesRef = collection(db, 'users', userId, 'accounts', accountId, 'trades');
+            const tradesSnapshot = await getDocs(tradesRef);
+            const deletePromises = [];
+            tradesSnapshot.forEach(doc => {
+                deletePromises.push(deleteDoc(doc.ref));
+            });
+            await Promise.all(deletePromises);
+            await deleteDoc(doc(db, 'users', userId, 'accounts', accountId));
+            
+            // If the deleted account was active, clear settings and let the listener handle it
+            if(activeAccountId === accountId) {
+                activeAccountId = null;
+                localStorage.removeItem(`activeAccountId_${userId}`);
+            }
+        }
+
+        function renderAccountsList(userId) {
             ui.accountsList.innerHTML = '';
             if (allAccounts.length === 0) {
                 ui.accountsList.innerHTML = '<p class="text-gray-500 text-sm">Anda belum memiliki akun. Silakan buat satu.</p>';
@@ -466,15 +519,18 @@
             }
             allAccounts.forEach(acc => {
                 const accDiv = document.createElement('div');
-                accDiv.className = `p-3 rounded-lg flex justify-between items-center cursor-pointer ${acc.id === activeAccountId ? 'bg-blue-100 border border-blue-400' : 'bg-gray-100'}`;
+                accDiv.className = `p-3 rounded-lg flex justify-between items-center ${acc.id === activeAccountId ? 'bg-blue-100 border border-blue-400' : 'bg-gray-100'}`;
                 accDiv.innerHTML = `
-                    <div>
+                    <div class="cursor-pointer flex-grow" data-account-id="${acc.id}">
                         <p class="font-bold">${acc.name}</p>
                         <p class="text-sm text-gray-500">Saldo Awal: ${acc.startBalance} ${acc.currency}</p>
                     </div>
-                    ${acc.id === activeAccountId ? '<span class="text-xs font-bold text-blue-600">AKTIF</span>' : ''}
+                    <button class="delete-account-btn text-red-500 hover:text-red-700 p-2" data-account-id="${acc.id}">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm4 0a1 1 0 012 0v6a1 1 0 11-2 0V8z" clip-rule="evenodd" /></svg>
+                    </button>
                 `;
-                accDiv.addEventListener('click', () => setActiveAccount(acc.id, auth.currentUser.uid));
+                accDiv.querySelector('.flex-grow').addEventListener('click', () => setActiveAccount(acc.id, userId));
+                accDiv.querySelector('.delete-account-btn').addEventListener('click', () => deleteAccount(userId, acc.id));
                 ui.accountsList.appendChild(accDiv);
             });
         }
@@ -511,7 +567,9 @@
         }
 
         function updatePairDataList() {
-            const uniquePairs = [...new Set(allTrades.map(trade => trade.pair))];
+            const defaultPairs = ["EUR/USD", "GBP/USD", "USD/JPY", "AUD/USD", "USD/CAD", "USD/CHF", "XAU/USD", "BTC/USD"];
+            const userPairs = allTrades.map(trade => trade.pair);
+            const uniquePairs = [...new Set([...defaultPairs, ...userPairs])].sort();
             ui.pairDataList.innerHTML = uniquePairs.map(p => `<option value="${p}"></option>`).join('');
         }
 
@@ -730,10 +788,56 @@
             callGeminiAPI(prompt, modalBody);
         }
         
+        // --- NEWS FEATURE ---
+        async function fetchNews() {
+            const newsList = document.getElementById('news-list');
+            const CORS_PROXY = "https://api.allorigins.win/raw?url=";
+            const RSS_URL = "https://www.myfxbook.com/rss/news";
+            
+            try {
+                const response = await fetch(CORS_PROXY + RSS_URL);
+                if(!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const str = await response.text();
+                const data = new window.DOMParser().parseFromString(str, "text/xml");
+                const items = data.querySelectorAll("item");
+                newsCache = [];
+                let html = "";
+                items.forEach(el => {
+                    const title = el.querySelector("title").innerHTML;
+                    const link = el.querySelector("link").innerHTML;
+                    const description = el.querySelector("description").innerHTML.replace("]]>", "");
+                    newsCache.push(title);
+                    html += `
+                        <div class="p-3 border-b border-gray-200">
+                            <a href="${link}" target="_blank" class="font-bold hover:text-blue-600">${title}</a>
+                            <p class="text-sm text-gray-600 mt-1">${description}</p>
+                        </div>
+                    `;
+                });
+                newsList.innerHTML = html;
+            } catch(error) {
+                newsList.innerHTML = `<p class="text-red-500">Gagal memuat berita. Silakan coba lagi nanti.</p>`;
+                console.error("Error fetching news:", error);
+            }
+        }
+        
+        function handleAiNewsRequest() {
+            if(newsCache.length === 0) {
+                alert("Berita belum dimuat. Silakan tunggu sebentar.");
+                return;
+            }
+            const watchedPairs = document.getElementById('watched-pairs').value || "EUR/USD, GBP/JPY, XAU/USD";
+            const newsTitles = newsCache.slice(0, 10).join('. ');
+            const prompt = `Anda adalah analis pasar keuangan netral. Berdasarkan berita utama forex berikut: "${newsTitles}". Dan dengan fokus pada pasangan mata uang ini: "${watchedPairs}". Berikan ringkasan sentimen pasar saat ini dalam 2-3 poin singkat (gunakan <ul><li>). Hindari saran beli/jual, fokus hanya pada potensi volatilitas atau arah umum yang diimplikasikan oleh berita.`;
+            callGeminiAPI(prompt, ui.aiNewsResult);
+        }
+
+
         // --- EVENT LISTENERS ---
         document.getElementById('cancel-edit-btn').addEventListener('click', resetTradeForm);
         document.getElementById('calculate-risk-btn').addEventListener('click', handleRiskCalculation);
         document.getElementById('sanity-check-btn').addEventListener('click', handleSanityCheck);
+        ui.aiNewsBtn.addEventListener('click', handleAiNewsRequest);
         
         // Modal Listeners
         const modals = document.querySelectorAll('.modal-overlay');
