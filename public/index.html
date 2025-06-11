@@ -66,6 +66,7 @@
             color: #6b7280; font-size: 0.75rem;
             padding: 0.25rem 1rem; border-radius: 0.5rem;
             transition: all 0.2s ease-in-out;
+            cursor: pointer;
         }
         .nav-item.active { color: #3b82f6; background-color: #eff6ff; }
         .nav-item svg { width: 24px; height: 24px; margin-bottom: 0.25rem; }
@@ -111,6 +112,7 @@
                     <form id="trade-form" class="space-y-4">
                         <input type="hidden" id="trade-id">
                         <datalist id="pair-list"></datalist>
+                        <datalist id="strategy-list"></datalist>
                         <div class="grid grid-cols-2 gap-4">
                             <div>
                                 <label for="pair" class="block text-sm font-medium">Pair</label>
@@ -123,7 +125,7 @@
                         </div>
                         <div>
                             <label for="strategy" class="block text-sm font-medium">Setup / Strategi</label>
-                            <input type="text" id="strategy" placeholder="cth: Breakout H1" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            <input type="text" id="strategy" list="strategy-list" placeholder="cth: Breakout H1" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                         </div>
                         <div class="grid grid-cols-2 gap-4">
                              <div>
@@ -149,7 +151,13 @@
                     </form>
                 </div>
                  <div class="card">
-                    <h2 class="text-2xl font-bold mb-4">Riwayat Trade</h2>
+                    <h2 class="text-2xl font-bold mb-4 flex justify-between items-center">
+                        <span>Riwayat Trade</span>
+                        <div class="space-x-2">
+                            <button id="import-btn" class="text-sm bg-gray-200 text-gray-700 font-semibold py-1 px-3 rounded-lg hover:bg-gray-300">Impor</button>
+                            <button id="export-btn" class="text-sm bg-gray-200 text-gray-700 font-semibold py-1 px-3 rounded-lg hover:bg-gray-300">Ekspor</button>
+                        </div>
+                    </h2>
                     <div class="overflow-x-auto max-h-[450px]">
                         <table class="w-full text-sm text-left">
                             <thead class="text-xs uppercase bg-gray-700 text-white sticky top-0">
@@ -271,7 +279,7 @@
                 <div id="ai-news-result" class="p-4 bg-blue-50 border border-blue-200 rounded-md mb-6 min-h-[50px]">
                     <p class="text-gray-500">Outlook dari AI akan muncul di sini...</p>
                 </div>
-                <h3 class="text-xl font-bold mb-2">Berita Terbaru dari Myfxbook</h3>
+                <h3 class="text-xl font-bold mb-2">Berita Terbaru dari Investing.com</h3>
                 <div id="news-list" class="space-y-4 max-h-[400px] overflow-y-auto">
                     <div class="loader"></div>
                 </div>
@@ -321,6 +329,17 @@
             </div>
         </div>
     </div>
+    <div id="import-modal" class="modal-overlay hidden">
+        <div class="modal-content text-center">
+            <span class="modal-close-btn modal-close">&times;</span>
+            <h2 class="text-2xl font-bold mb-4">Impor Riwayat Trade</h2>
+            <p class="mb-4 text-gray-600">Unggah file CSV dari MetaTrader atau gunakan template kami.</p>
+            <input type="file" id="csv-file-input" accept=".csv" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 mb-4"/>
+            <button id="process-import-btn" class="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 mb-4">Proses Impor</button>
+            <a id="download-template-btn" href="#" class="text-sm text-blue-600 hover:underline">Download Template CSV</a>
+            <div id="import-status" class="mt-4 text-sm"></div>
+        </div>
+    </div>
         
     <footer class="text-center mt-12 py-4">
         <p class="text-sm text-gray-500">Dibuat dengan ❤️ oleh Nabhan</p>
@@ -330,7 +349,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
         import { getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, query, orderBy, serverTimestamp, updateDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, query, orderBy, serverTimestamp, updateDoc, getDocs, writeBatch } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // Your web app's Firebase configuration
         const firebaseConfig = {
@@ -375,7 +394,9 @@
             accountsList: document.getElementById('accounts-list'),
             tradeForm: document.getElementById('trade-form'),
             pairDataList: document.getElementById('pair-list'),
+            strategyDataList: document.getElementById('strategy-list'),
             donationModal: document.getElementById('donation-modal'),
+            importModal: document.getElementById('import-modal'),
             newsList: document.getElementById('news-list'),
             aiNewsBtn: document.getElementById('ai-news-btn'),
             aiNewsResult: document.getElementById('ai-news-result')
@@ -441,6 +462,8 @@
             listenForAccounts(user.uid);
             ui.accountForm.addEventListener('submit', (e) => handleAccountForm(e, user.uid));
             ui.tradeForm.addEventListener('submit', handleTradeFormSubmit);
+            document.getElementById('import-btn').addEventListener('click', () => ui.importModal.classList.remove('hidden'));
+            document.getElementById('export-btn').addEventListener('click', exportToCSV);
         }
         
         // --- ACCOUNT MANAGEMENT ---
@@ -451,14 +474,18 @@
                 allAccounts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 renderAccountsList(userId);
                 
+                if (activeAccountId && !allAccounts.some(acc => acc.id === activeAccountId)) {
+                    activeAccountId = null;
+                }
+
                 const storedAccountId = localStorage.getItem(`activeAccountId_${userId}`);
                 const accountExists = allAccounts.some(acc => acc.id === storedAccountId);
 
                 if (accountExists) {
-                    setActiveAccount(storedAccountId, userId);
-                } else if (allAccounts.length > 0) {
+                     if (activeAccountId !== storedAccountId) setActiveAccount(storedAccountId, userId);
+                } else if (allAccounts.length > 0 && !activeAccountId) {
                     setActiveAccount(allAccounts[0].id, userId);
-                } else {
+                } else if (allAccounts.length === 0) {
                     clearDisplay();
                 }
             }, (error) => { console.error("Error listening for accounts:", error) });
@@ -484,7 +511,7 @@
         function setActiveAccount(accountId, userId) {
             activeAccountId = accountId;
             localStorage.setItem(`activeAccountId_${userId}`, accountId);
-            renderAccountsList(userId); // to highlight the active one
+            renderAccountsList(userId);
             const activeAccount = allAccounts.find(acc => acc.id === accountId);
             if(activeAccount) {
                 ui.activeAccountName.textContent = activeAccount.name;
@@ -494,20 +521,22 @@
 
         async function deleteAccount(userId, accountId) {
             if (!confirm(`Apakah Anda yakin ingin menghapus akun ini beserta SEMUA trade di dalamnya? Tindakan ini tidak dapat diurungkan.`)) return;
-
-            const tradesRef = collection(db, 'users', userId, 'accounts', accountId, 'trades');
-            const tradesSnapshot = await getDocs(tradesRef);
-            const deletePromises = [];
-            tradesSnapshot.forEach(doc => {
-                deletePromises.push(deleteDoc(doc.ref));
-            });
-            await Promise.all(deletePromises);
-            await deleteDoc(doc(db, 'users', userId, 'accounts', accountId));
-            
-            // If the deleted account was active, clear settings and let the listener handle it
-            if(activeAccountId === accountId) {
-                activeAccountId = null;
-                localStorage.removeItem(`activeAccountId_${userId}`);
+            try {
+                const tradesRef = collection(db, 'users', userId, 'accounts', accountId, 'trades');
+                const tradesSnapshot = await getDocs(tradesRef);
+                const batch = writeBatch(db);
+                tradesSnapshot.forEach(doc => {
+                    batch.delete(doc.ref);
+                });
+                await batch.commit();
+                await deleteDoc(doc(db, 'users', userId, 'accounts', accountId));
+                
+                if(activeAccountId === accountId) {
+                    activeAccountId = null;
+                    localStorage.removeItem(`activeAccountId_${userId}`);
+                }
+            } catch (error) {
+                console.error("Error deleting account and its trades:", error);
             }
         }
 
@@ -563,14 +592,19 @@
              updateDashboard();
              updateChart();
              generateOverallAnalysis();
-             updatePairDataList();
+             updatePairAndStrategyDataLists();
         }
 
-        function updatePairDataList() {
+        function updatePairAndStrategyDataLists() {
             const defaultPairs = ["EUR/USD", "GBP/USD", "USD/JPY", "AUD/USD", "USD/CAD", "USD/CHF", "XAU/USD", "BTC/USD"];
             const userPairs = allTrades.map(trade => trade.pair);
             const uniquePairs = [...new Set([...defaultPairs, ...userPairs])].sort();
             ui.pairDataList.innerHTML = uniquePairs.map(p => `<option value="${p}"></option>`).join('');
+
+            const defaultStrategies = ["Supply and Demand", "Breakout", "Trend Following", "Scalping", "Swing Trading", "Fibonacci Retracement", "Smart Money Concept"];
+            const userStrategies = allTrades.map(trade => trade.strategy);
+            const uniqueStrategies = [...new Set([...defaultStrategies, ...userStrategies])].sort();
+            ui.strategyDataList.innerHTML = uniqueStrategies.map(s => `<option value="${s}"></option>`).join('');
         }
 
         async function handleTradeFormSubmit(e) {
@@ -790,9 +824,9 @@
         
         // --- NEWS FEATURE ---
         async function fetchNews() {
-            const newsList = document.getElementById('news-list');
+            ui.newsList.innerHTML = '<div class="loader"></div>';
             const CORS_PROXY = "https://api.allorigins.win/raw?url=";
-            const RSS_URL = "https://www.myfxbook.com/rss/news";
+            const RSS_URL = encodeURIComponent("https://www.investing.com/rss/news_285.rss"); // Forex News
             
             try {
                 const response = await fetch(CORS_PROXY + RSS_URL);
@@ -803,9 +837,9 @@
                 newsCache = [];
                 let html = "";
                 items.forEach(el => {
-                    const title = el.querySelector("title").innerHTML;
-                    const link = el.querySelector("link").innerHTML;
-                    const description = el.querySelector("description").innerHTML.replace("]]>", "");
+                    const title = el.querySelector("title").textContent;
+                    const link = el.querySelector("link").textContent;
+                    const description = el.querySelector("description").textContent.replace(/<[^>]*>?/gm, '');
                     newsCache.push(title);
                     html += `
                         <div class="p-3 border-b border-gray-200">
@@ -814,9 +848,9 @@
                         </div>
                     `;
                 });
-                newsList.innerHTML = html;
+                ui.newsList.innerHTML = html;
             } catch(error) {
-                newsList.innerHTML = `<p class="text-red-500">Gagal memuat berita. Silakan coba lagi nanti.</p>`;
+                ui.newsList.innerHTML = `<p class="text-red-500">Gagal memuat berita. Silakan coba lagi nanti.</p>`;
                 console.error("Error fetching news:", error);
             }
         }
@@ -832,12 +866,165 @@
             callGeminiAPI(prompt, ui.aiNewsResult);
         }
 
+        // --- CSV IMPORT/EXPORT ---
+        function exportToCSV() {
+            if(allTrades.length === 0) {
+                alert("Tidak ada data untuk diekspor.");
+                return;
+            }
+            const headers = "pair,lotSize,strategy,position,profit,notes,date";
+            const csvRows = [headers];
+            allTrades.forEach(trade => {
+                const date = trade.createdAt ? trade.createdAt.toDate().toISOString() : new Date().toISOString();
+                const row = [
+                    trade.pair,
+                    trade.lotSize,
+                    `"${trade.strategy.replace(/"/g, '""')}"`,
+                    trade.position,
+                    trade.plCents,
+                    `"${trade.notes.replace(/"/g, '""')}"`,
+                    date
+                ];
+                csvRows.push(row.join(','));
+            });
+
+            const csvString = csvRows.join('\n');
+            const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            const url = URL.createObjectURL(blob);
+            link.setAttribute("href", url);
+            const accName = getActiveAccount()?.name.replace(/\s/g, '_') || 'jurnal';
+            link.setAttribute("download", `jurnal_${accName}_${new Date().toISOString().split('T')[0]}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function downloadTemplate() {
+            const headers = "pair,lotSize,strategy,position,profit,notes";
+            const example = "EUR/USD,0.01,Breakout H1,buy,50.25,\"Entry sesuai rencana\"";
+            const csvString = `${headers}\n${example}`;
+            const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            const url = URL.createObjectURL(blob);
+            link.setAttribute("href", url);
+            link.setAttribute("download", `template_jurnal_trading.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        async function processCSVImport(file) {
+            if(!activeAccountId) {
+                alert("Pilih akun aktif untuk mengimpor trade.");
+                return;
+            }
+            const importStatus = document.getElementById('import-status');
+            importStatus.innerHTML = '<div class="loader"></div><p>Memproses file...</p>';
+            
+            const reader = new FileReader();
+            reader.onload = async (event) => {
+                const text = event.target.result;
+                const lines = text.split(/\r\n|\n/);
+                const headers = lines[0].toLowerCase().split(',');
+
+                let tradesToImport = [];
+                
+                // --- MT4/5 Detection ---
+                if (lines[0].includes("Login") && lines[1].includes("Name")) { 
+                    // This is likely an MT4/5 detailed report. Find the table.
+                    let dataStartIndex = -1;
+                    for(let i=0; i<lines.length; i++) {
+                        if(lines[i].toLowerCase().includes('ticket,open time,type,size,item,price,s/l')) {
+                            dataStartIndex = i + 1;
+                            break;
+                        }
+                    }
+
+                    if(dataStartIndex === -1) {
+                        importStatus.textContent = "Format Laporan MetaTrader tidak dikenali. Pastikan ini adalah laporan riwayat yang lengkap.";
+                        return;
+                    }
+
+                    for (let i = dataStartIndex; i < lines.length; i++) {
+                        const columns = lines[i].split(',');
+                        if (columns.length < 11 || columns[0] === '' || columns[2] !== 'buy' && columns[2] !== 'sell') continue;
+                        
+                        tradesToImport.push({
+                            pair: columns[4].toUpperCase(),
+                            lotSize: parseFloat(columns[3]),
+                            strategy: "Impor dari MT",
+                            position: columns[2], // 'buy' or 'sell'
+                            plCents: parseFloat(columns[10]), // Profit column
+                            notes: `Diimpor dari MT. Tiket: ${columns[0]}`,
+                            createdAt: new Date(columns[1].replace(/\./g, '/')) // Adjust date format
+                        });
+                    }
+
+                } else { // --- Template Detection ---
+                    const requiredHeaders = ['pair', 'position', 'profit'];
+                    if (!requiredHeaders.every(h => headers.includes(h))) {
+                        importStatus.textContent = 'File CSV tidak valid. Pastikan menggunakan template yang benar.';
+                        return;
+                    }
+
+                    for (let i = 1; i < lines.length; i++) {
+                        if (!lines[i]) continue;
+                        const columns = lines[i].split(',');
+                        const trade = {};
+                        headers.forEach((header, index) => {
+                            trade[header.trim()] = columns[index]?.trim().replace(/"/g, '');
+                        });
+                        
+                        tradesToImport.push({
+                            pair: trade.pair?.toUpperCase() || "UNKNOWN",
+                            lotSize: parseFloat(trade.lotSize) || 0.01,
+                            strategy: trade.strategy || "Impor",
+                            position: trade.position || "buy",
+                            plCents: parseFloat(trade.profit) || 0,
+                            notes: trade.notes || "Diimpor dari CSV",
+                            createdAt: trade.date ? new Date(trade.date) : new Date()
+                        });
+                    }
+                }
+
+                if(tradesToImport.length > 0) {
+                     importStatus.innerHTML = `<div class="loader"></div><p>Menyimpan ${tradesToImport.length} trade ke database...</p>`;
+                     const tradesPath = `users/${auth.currentUser.uid}/accounts/${activeAccountId}/trades`;
+                     const batch = writeBatch(db);
+                     tradesToImport.forEach(trade => {
+                        const newDocRef = doc(collection(db, tradesPath));
+                        batch.set(newDocRef, trade);
+                     });
+                     await batch.commit();
+                     importStatus.textContent = `${tradesToImport.length} trade berhasil diimpor!`;
+                     setTimeout(() => ui.importModal.classList.add('hidden'), 2000);
+                } else {
+                    importStatus.textContent = 'Tidak ada trade yang valid ditemukan dalam file.';
+                }
+            };
+            reader.readAsText(file);
+        }
 
         // --- EVENT LISTENERS ---
         document.getElementById('cancel-edit-btn').addEventListener('click', resetTradeForm);
         document.getElementById('calculate-risk-btn').addEventListener('click', handleRiskCalculation);
         document.getElementById('sanity-check-btn').addEventListener('click', handleSanityCheck);
         ui.aiNewsBtn.addEventListener('click', handleAiNewsRequest);
+        document.getElementById('process-import-btn').addEventListener('click', () => {
+            const fileInput = document.getElementById('csv-file-input');
+            if (fileInput.files.length > 0) {
+                processCSVImport(fileInput.files[0]);
+            } else {
+                alert("Silakan pilih file CSV terlebih dahulu.");
+            }
+        });
+        document.getElementById('download-template-btn').addEventListener('click', (e) => {
+            e.preventDefault();
+            downloadTemplate();
+        });
         
         // Modal Listeners
         const modals = document.querySelectorAll('.modal-overlay');
