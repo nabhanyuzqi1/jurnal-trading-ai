@@ -255,11 +255,11 @@
                         </div>
                         <button id="calculate-risk-btn" class="w-full bg-teal-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-teal-600">Hitung Lot Size</button>
                         <div id="risk-result" class="text-center p-4 bg-gray-50 rounded-lg mt-4 hidden">
-                           <p class="text-sm text-gray-600">Rekomendasi Lot Size:</p>
+                           <p class="text-sm text-gray-600">Rekomendasi Total Lot Size:</p>
                            <p id="lot-size-result" class="text-2xl font-bold text-blue-600"></p>
                            <p class="text-xs text-gray-500 mt-1">Estimasi Risiko: <span id="risk-amount-result"></span></p>
-                           <button id="sanity-check-btn" class="mt-2 text-sm text-blue-600 hover:underline">Dapatkan Pemeriksaan Kewajaran dari AI</button>
-                           <div id="sanity-check-result" class="text-left text-xs mt-2 p-2 bg-blue-50 border-blue-200 rounded-md"></div>
+                           <button id="ai-recommendation-btn" class="mt-2 text-sm text-blue-600 hover:underline">Dapatkan Rekomendasi & Cek Kewajaran dari AI</button>
+                           <div id="ai-recommendation-result" class="text-left text-xs mt-2 p-2 bg-blue-50 border-blue-200 rounded-md"></div>
                         </div>
                     </div>
                 </div>
@@ -784,11 +784,25 @@
             if (isNaN(slPips) || isNaN(riskPercent) || slPips <= 0 || riskPercent <= 0) return;
 
             const riskAmount = currentBalance * (riskPercent / 100);
-            const pipValuePerMicroLot = 0.10; 
+            
+            // For a standard lot (100,000 units), pip value is roughly $10 for XXX/USD pairs.
+            // For a micro lot (1,000 units or 0.01 lot), pip value is $0.10.
+            const pipValuePerStandardLot = 10;
             const valuePerPip = riskAmount / slPips;
-            const recommendedLotSize = valuePerPip / pipValuePerMicroLot / 100;
+            
+            let recommendedLotSize;
+            let lotDisplay;
+            
+            // In a Cent account, P/L is in cents. So riskAmount is in cents.
+            // In a USD account, P/L is in USD. So riskAmount is in USD.
+            // Calculation needs to be consistent. Let's base it on USD value.
+            const riskAmountUSD = activeAccount.currency === 'cent' ? riskAmount / 100 : riskAmount;
+            const valuePerPipUSD = riskAmountUSD / slPips;
+            
+            recommendedLotSize = valuePerPipUSD / pipValuePerStandardLot; // This is standard lot size
 
-            const lotDisplay = activeAccount.currency === 'cent' ? (recommendedLotSize * 100).toFixed(2) + ' (Cent Lot)' : recommendedLotSize.toFixed(2) + ' (Std Lot)';
+            lotDisplay = recommendedLotSize.toFixed(2) + ' (Std Lot)';
+            
             const riskDisplay = activeAccount.currency === 'cent' ? `${riskAmount.toFixed(2)} sen` : `$${riskAmount.toFixed(2)}`;
 
             document.getElementById('lot-size-result').textContent = lotDisplay;
@@ -796,9 +810,19 @@
             document.getElementById('risk-result').classList.remove('hidden');
         }
         
-        function handleSanityCheck() {
-            const prompt = `Saya trading di akun ${getActiveAccount()?.currency || ''} dengan saldo ${document.getElementById('balance').textContent}. Saya berencana membuka posisi di ${document.getElementById('pair').value || 'pair mayor'} dengan risiko ${document.getElementById('risk-percent').value}% dan stop loss ${document.getElementById('stop-loss').value} pips. Kalkulator menyarankan lot size ${document.getElementById('lot-size-result').textContent}. Berikan 'sanity check' singkat. Apakah ini rencana manajemen risiko yang masuk akal?`;
-            callGeminiAPI(prompt, document.getElementById('sanity-check-result'));
+        function handleAiRecommendation() {
+            const lotSize = document.getElementById('lot-size-result').textContent;
+            if(!lotSize) { alert("Hitung lot size terlebih dahulu."); return; }
+            
+            const sl = document.getElementById('stop-loss').value;
+            const risk = document.getElementById('risk-percent').value;
+            const pairInput = document.getElementById('pair').value || "pasangan mayor";
+
+            const prompt = `Saya trading di akun ${getActiveAccount()?.currency || ''} dengan saldo ${document.getElementById('balance').textContent}. Saya berencana membuka posisi di ${pairInput} dengan risiko ${risk}% dan stop loss ${sl} pips. Kalkulator menyarankan total lot size ${lotSize}. Berdasarkan ini:
+1.  Berikan 'sanity check' singkat. Apakah ini rencana manajemen risiko yang masuk akal?
+2.  Berikan rekomendasi strategi layering (misal, 2-3 layer) dengan pembagian lot yang sesuai untuk setiap layer (total lot harus sama dengan ${lotSize}) dan berikan saran perkiraan titik entry untuk setiap layer relatif terhadap harga saat ini.
+Gunakan format HTML yang jelas.`;
+            callGeminiAPI(prompt, document.getElementById('ai-recommendation-result'));
         }
 
         async function generateOverallAnalysis() {
@@ -1017,7 +1041,7 @@
         // --- EVENT LISTENERS ---
         document.getElementById('cancel-edit-btn').addEventListener('click', resetTradeForm);
         document.getElementById('calculate-risk-btn').addEventListener('click', handleRiskCalculation);
-        document.getElementById('sanity-check-btn').addEventListener('click', handleSanityCheck);
+        document.getElementById('ai-recommendation-btn').addEventListener('click', handleAiRecommendation);
         ui.aiNewsBtn.addEventListener('click', handleAiNewsRequest);
         document.getElementById('process-import-btn').addEventListener('click', () => {
             const fileInput = document.getElementById('csv-file-input');
@@ -1046,4 +1070,4 @@
         initializeChart();
     </script>
 </body>
-</ht
+</html>
