@@ -64,9 +64,10 @@
         .nav-item {
             display: flex; flex-direction: column; align-items: center;
             color: #6b7280; font-size: 0.75rem;
-            padding: 0.25rem 1rem; border-radius: 0.5rem;
+            padding: 0.25rem 0.5rem; border-radius: 0.5rem;
             transition: all 0.2s ease-in-out;
             cursor: pointer;
+            width: 20%;
         }
         .nav-item.active { color: #3b82f6; background-color: #eff6ff; }
         .nav-item svg { width: 24px; height: 24px; margin-bottom: 0.25rem; }
@@ -88,6 +89,9 @@
         }
         .fab:hover { transform: scale(1.1); }
         .fab.education-fab { background-color: #16a34a; }
+        .impact-High { color: #dc2626; }
+        .impact-Medium { color: #f59e0b; }
+        .impact-Low { color: #fbbf24; }
     </style>
 </head>
 <body class="antialiased">
@@ -183,6 +187,71 @@
                 </div>
             </div>
         </div>
+        
+               <div id="pasar-view" class="view hidden">
+             <div class="card">
+                <h2 class="text-2xl font-bold mb-4">Watchlist Pasar</h2>
+                <!-- TradingView Widget BEGIN -->
+                <div class="tradingview-widget-container">
+                  <div id="tradingview-widget"></div>
+                  <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+                  <script type="text/javascript">
+                    window.addEventListener('DOMContentLoaded', function() {
+                      if (typeof TradingView !== 'undefined') {
+                        // Add dropdown for pair selection above the widget
+                        const pairs = [
+                          { proName: "FOREXCOM:SPXUSD", title: "S&P 500" },
+                          { proName: "FOREXCOM:NSXUSD", title: "Nasdaq 100" },
+                          { proName: "FX:EURUSD", title: "EUR/USD" },
+                          { proName: "OANDA:XAUUSD", title: "XAU/USD" },
+                          { proName: "FX:GBPUSD", title: "GBP/USD" },
+                          { proName: "FX_IDC:USDJPY", title: "USD/JPY" },
+                          { proName: "OANDA:XAUUSD", title: "Emas" }
+                        ];
+
+                        // Create dropdown
+                        const dropdown = document.createElement('select');
+                        dropdown.className = "mb-4 p-2 border rounded";
+                        pairs.forEach((pair, idx) => {
+                          const option = document.createElement('option');
+                          option.value = idx;
+                          option.textContent = pair.title || pair.proName;
+                          dropdown.appendChild(option);
+                        });
+                        const container = document.getElementById('tradingview-widget').parentElement;
+                        container.insertBefore(dropdown, document.getElementById('tradingview-widget'));
+
+                        // Function to render widget for selected pair
+                        function renderWidget(pair) {
+                          document.getElementById('tradingview-widget').innerHTML = "";
+                          new TradingView.widget({
+                            "container_id": "tradingview-widget",
+                            "symbol": pair.proName,
+                            "showSymbolLogo": true,
+                            "colorTheme": "light",
+                            "isTransparent": false,
+                            "displayMode": "adaptive",
+                            "locale": "id",
+                            "width": "100%",
+                            "height": 400
+                          });
+                        }
+
+                        // Initial render
+                        renderWidget(pairs[0]);
+
+                        // Change widget on dropdown change
+                        dropdown.addEventListener('change', function() {
+                          renderWidget(pairs[this.value]);
+                        });
+                      }
+                    });
+                  </script>
+                </div>
+                <!-- TradingView Widget END -->
+             </div>
+        </div>
+
 
         <div id="analisa-view" class="view hidden">
             <section id="dashboard" class="mb-8">
@@ -299,9 +368,19 @@
                 <div id="ai-news-result" class="p-4 bg-blue-50 border border-blue-200 rounded-md mb-6 min-h-[50px]">
                     <p class="text-gray-500">Outlook dari AI akan muncul di sini...</p>
                 </div>
-                <h3 class="text-xl font-bold mb-2">Berita Terbaru dari Pasar Global</h3>
-                <div id="news-list" class="space-y-4 max-h-[400px] overflow-y-auto">
-                    <div class="loader"></div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-xl font-bold mb-2">Kalender Ekonomi (Forex Factory)</h3>
+                        <div id="forex-factory-calendar" class="space-y-2 max-h-[400px] overflow-y-auto">
+                            <div class="loader"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold mb-2">Berita Umum Pasar</h3>
+                        <div id="news-list" class="space-y-4 max-h-[400px] overflow-y-auto">
+                            <div class="loader"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -313,6 +392,10 @@
         <button data-view="jurnal-view" class="nav-item active">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" /></svg>
             Jurnal
+        </button>
+        <button data-view="pasar-view" class="nav-item">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
+            Pasar
         </button>
         <button data-view="analisa-view" class="nav-item">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h12A2.25 2.25 0 0020.25 14.25V3.75M3.75 18.75h16.5M12 12.75h.008v.008H12v-.008z" /></svg>
@@ -436,6 +519,7 @@
             educationModal: document.getElementById('education-modal'),
             importModal: document.getElementById('import-modal'),
             newsList: document.getElementById('news-list'),
+            forexFactoryCalendar: document.getElementById('forex-factory-calendar'),
             aiNewsBtn: document.getElementById('ai-news-btn'),
             aiNewsResult: document.getElementById('ai-news-result')
         };
@@ -505,6 +589,7 @@
             navItem.classList.add('active');
             if(viewId === 'news-view' && newsCache.length === 0) {
                 fetchNews();
+                fetchForexFactoryNews();
             }
         });
 
@@ -871,20 +956,20 @@
             const riskAmount = currentBalance * (riskPercent / 100);
             const pipValuePerStandardLotUSD = 10;
             
-            let riskAmountUSD;
-            if (activeAccount.currency === 'cent') {
-                riskAmountUSD = riskAmount / 100;
-            } else {
-                riskAmountUSD = riskAmount;
-            }
+            let recommendedLotSize; // in Standard Lots
+            let lotDisplay;
             
-            const valuePerPipUSD = riskAmountUSD / slPips;
-            const recommendedLotSize = valuePerPipUSD / pipValuePerStandardLot;
-            
-            let lotDisplay = recommendedLotSize.toFixed(2) + ' (Std Lot)';
             if (activeAccount.currency === 'cent') {
-                const centLotSize = recommendedLotSize * 100;
-                lotDisplay = centLotSize.toFixed(2) + ' (Cent Lot)';
+                const riskAmountCents = riskAmount;
+                const pipValuePerCentLotCents = 10;
+                const valuePerPipCents = riskAmountCents / slPips;
+                recommendedLotSize = valuePerPipCents / pipValuePerCentLotCents;
+                lotDisplay = recommendedLotSize.toFixed(2) + ' (Cent Lot)';
+            } else { // USD Account
+                const riskAmountUSD = riskAmount;
+                const valuePerPipUSD = riskAmountUSD / slPips;
+                recommendedLotSize = valuePerPipUSD / pipValuePerStandardLotUSD;
+                lotDisplay = recommendedLotSize.toFixed(2) + ' (Std Lot)';
             }
             
             const riskDisplay = activeAccount.currency === 'cent' ? `${riskAmount.toFixed(2)} sen` : `$${riskAmount.toFixed(2)}`;
@@ -935,51 +1020,63 @@ Gunakan format HTML yang jelas.`;
             ui.newsList.innerHTML = '<div class="loader"></div>';
             const RSS_TO_JSON_API = "https://api.rss2json.com/v1/api.json?rss_url=";
             const investingUrl = encodeURIComponent("https://www.investing.com/rss/news_285.rss");
-            const myfxbookUrl = encodeURIComponent("https://www.myfxbook.com/rss/news");
 
             try {
-                const [investingRes, myfxbookRes] = await Promise.allSettled([
-                    fetch(RSS_TO_JSON_API + investingUrl),
-                    fetch(RSS_TO_JSON_API + myfxbookUrl)
-                ]);
-
-                let allItems = [];
-
-                if (investingRes.status === 'fulfilled' && investingRes.value.ok) {
-                    const data = await investingRes.value.json();
-                    if (data.status === 'ok') {
-                        allItems = allItems.concat(data.items.map(item => ({...item, source: 'Investing.com'})));
-                    }
-                }
-
-                if (myfxbookRes.status === 'fulfilled' && myfxbookRes.value.ok) {
-                    const data = await myfxbookRes.value.json();
-                     if (data.status === 'ok') {
-                        allItems = allItems.concat(data.items.map(item => ({...item, source: 'Myfxbook'})));
-                    }
-                }
+                const response = await fetch(RSS_TO_JSON_API + investingUrl);
+                if(!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const data = await response.json();
+                if (data.status !== 'ok') throw new Error('Gagal mengambil data berita dari API.');
                 
-                if (allItems.length === 0) throw new Error("Gagal mengambil berita dari semua sumber.");
-
-                allItems.sort((a,b) => new Date(b.pubDate) - new Date(a.pubDate));
-                newsCache = allItems.map(item => item.title);
-
-                let html = allItems.map(item => {
+                const items = data.items;
+                newsCache = items.map(item => item.title);
+                let html = items.map(item => {
                     const title = item.title;
                     const link = item.link;
                     const description = item.description.replace(/<[^>]*>?/gm, '').split('.').slice(0, 2).join('.') + '.';
                     return `
                         <div class="p-3 border-b border-gray-200">
                             <a href="${link}" target="_blank" class="font-bold hover:text-blue-600">${title}</a>
-                            <p class="text-xs text-gray-500 mt-1">${item.source}</p>
+                            <p class="text-xs text-gray-500 mt-1">Investing.com</p>
                             <p class="text-sm text-gray-600 mt-1">${description}</p>
                         </div>
                     `;
                 }).join('');
                 ui.newsList.innerHTML = html;
             } catch(error) {
-                ui.newsList.innerHTML = `<p class="text-red-500">Gagal memuat berita. Sumber data mungkin sedang tidak tersedia. Silakan coba lagi nanti.</p>`;
-                console.error("Error fetching news:", error);
+                ui.newsList.innerHTML = `<p class="text-red-500">Gagal memuat berita umum. Silakan coba lagi nanti.</p>`;
+                console.error("Error fetching general news:", error);
+            }
+        }
+        
+        async function fetchForexFactoryNews() {
+            ui.forexFactoryCalendar.innerHTML = '<div class="loader"></div>';
+            const RSS_TO_JSON_API = "https://api.rss2json.com/v1/api.json?rss_url=";
+            // Use a public RSS proxy to bypass ISP block
+            // Try using a different RSS proxy that supports HTTPS and CORS
+            const FF_URL = encodeURIComponent("https://www.forexfactory.com/ff_calendar_thisweek.xml");
+
+            try {
+                const response = await fetch(RSS_TO_JSON_API + FF_URL);
+                if(!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const data = await response.json();
+                if (data.status !== 'ok') throw new Error('Gagal mengambil data kalender dari API.');
+                
+                let html = data.items.map(item => {
+                    const impactClass = item.title.includes('High') ? 'impact-High' : item.title.includes('Medium') ? 'impact-Medium' : 'impact-Low';
+                    return `
+                        <div class="p-2 border-b border-gray-200 flex items-center text-sm">
+                            <span class="font-bold w-16 ${impactClass}">${item.title.split(' ')[0]}</span>
+                            <div class="flex-grow pl-2">
+                                <p>${item.title.substring(item.title.indexOf(' ') + 1)}</p>
+                                <p class="text-xs text-gray-500">${new Date(item.pubDate).toLocaleString('id-ID')}</p>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                ui.forexFactoryCalendar.innerHTML = html;
+            } catch(error) {
+                ui.forexFactoryCalendar.innerHTML = `<p class="text-red-500">Gagal memuat kalender ekonomi.</p>`;
+                console.error("Error fetching Forex Factory news:", error);
             }
         }
         
