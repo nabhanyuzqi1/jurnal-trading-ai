@@ -70,16 +70,24 @@
         }
         .nav-item.active { color: #3b82f6; background-color: #eff6ff; }
         .nav-item svg { width: 24px; height: 24px; margin-bottom: 0.25rem; }
+        .fab-container {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            z-index: 1000;
+        }
         .fab {
-            position: fixed; bottom: 90px; right: 20px;
             background-color: #106cde; color: white;
             width: 60px; height: 60px; border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
             box-shadow: 0 4px 14px rgba(0,0,0,0.25);
             cursor: pointer; transition: transform 0.2s;
-            z-index: 1000;
         }
         .fab:hover { transform: scale(1.1); }
+        .fab.education-fab { background-color: #16a34a; }
     </style>
 </head>
 <body class="antialiased">
@@ -198,13 +206,25 @@
                 </div>
             </section>
              <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div class="card">
+                <div class="card lg:col-span-2">
                     <h2 class="text-2xl font-bold mb-4">Kurva Ekuitas</h2>
                     <div class="chart-container">
                         <canvas id="equity-curve-chart"></canvas>
                     </div>
                 </div>
                  <div class="card">
+                    <h2 class="text-2xl font-bold mb-4">Performa per Pair</h2>
+                     <div class="chart-container">
+                        <canvas id="pair-performance-chart"></canvas>
+                    </div>
+                </div>
+                 <div class="card">
+                    <h2 class="text-2xl font-bold mb-4">Performa per Strategi</h2>
+                     <div class="chart-container">
+                        <canvas id="strategy-performance-chart"></canvas>
+                    </div>
+                </div>
+                 <div class="card lg:col-span-2">
                     <h2 class="text-2xl font-bold mb-4">Analisis Performa AI</h2>
                     <div id="analysis-content" class="space-y-4 text-sm max-h-[350px] overflow-y-auto"></div>
                 </div>
@@ -279,7 +299,7 @@
                 <div id="ai-news-result" class="p-4 bg-blue-50 border border-blue-200 rounded-md mb-6 min-h-[50px]">
                     <p class="text-gray-500">Outlook dari AI akan muncul di sini...</p>
                 </div>
-                <h3 class="text-xl font-bold mb-2">Berita Terbaru dari Investing.com</h3>
+                <h3 class="text-xl font-bold mb-2">Berita Terbaru dari Pasar Global</h3>
                 <div id="news-list" class="space-y-4 max-h-[400px] overflow-y-auto">
                     <div class="loader"></div>
                 </div>
@@ -308,10 +328,14 @@
         </button>
     </nav>
     
-    <!-- Donation FAB -->
-    <button id="fab" class="fab hidden" title="Donasi untuk Nabhan">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 20 20" fill="currentColor"><path d="M10 3.5a1.5 1.5 0 013 0V4a1 1 0 001 1h1a1 1 0 011 1v3.5a1.5 1.5 0 01-3 0V9.5a.5.5 0 00-.5-.5h-1a.5.5 0 00-.5.5v.5a.5.5 0 01-.5.5h-1a.5.5 0 01-.5-.5v-1a.5.5 0 00-.5-.5H9a.5.5 0 00-.5.5v1a.5.5 0 01-.5.5H7a.5.5 0 01-.5-.5V9.5a.5.5 0 00-.5-.5h-1a.5.5 0 00-.5.5v.5a1.5 1.5 0 01-3 0V6a1 1 0 011-1h1a1 1 0 001-1V3.5z" /><path d="M5.5 11a3.5 3.5 0 11-1 3.337V16.5a.5.5 0 00.5.5h2a.5.5 0 00.5-.5v-2.163A3.5 3.5 0 015.5 11zm9 0a3.5 3.5 0 11-1 3.337V16.5a.5.5 0 00.5.5h2a.5.5 0 00.5-.5v-2.163A3.5 3.5 0 0114.5 11z" /></svg>
-    </button>
+    <div class="fab-container">
+        <button id="education-fab" class="fab education-fab hidden" title="Panduan Aplikasi">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
+        </button>
+        <button id="donation-fab" class="fab hidden" title="Donasi untuk Nabhan">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 20 20" fill="currentColor"><path d="M10 3.5a1.5 1.5 0 013 0V4a1 1 0 001 1h1a1 1 0 011 1v3.5a1.5 1.5 0 01-3 0V9.5a.5.5 0 00-.5-.5h-1a.5.5 0 00-.5.5v.5a.5.5 0 01-.5.5h-1a.5.5 0 01-.5-.5v-1a.5.5 0 00-.5-.5H9a.5.5 0 00-.5.5v1a.5.5 0 01-.5.5H7a.5.5 0 01-.5-.5V9.5a.5.5 0 00-.5-.5h-1a.5.5 0 00-.5.5v.5a1.5 1.5 0 01-3 0V6a1 1 0 011-1h1a1 1 0 001-1V3.5z" /><path d="M5.5 11a3.5 3.5 0 11-1 3.337V16.5a.5.5 0 00.5.5h2a.5.5 0 00.5-.5v-2.163A3.5 3.5 0 015.5 11zm9 0a3.5 3.5 0 11-1 3.337V16.5a.5.5 0 00.5.5h2a.5.5 0 00.5-.5v-2.163A3.5 3.5 0 0114.5 11z" /></svg>
+        </button>
+    </div>
     
     <!-- Modals -->
     <div id="mindset-modal" class="modal-overlay hidden">
@@ -326,6 +350,19 @@
                 <p class="font-semibold text-lg">Bank Central Asia (BCA)</p>
                 <p class="text-2xl font-bold text-blue-600 my-2">6695673021</p>
                 <p class="font-semibold">a/n Nabhan Yuzqi Al Mubarok</p>
+            </div>
+        </div>
+    </div>
+    <div id="education-modal" class="modal-overlay hidden">
+        <div class="modal-content text-left">
+            <span class="modal-close-btn modal-close">&times;</span>
+            <h2 class="text-2xl font-bold mb-4">Panduan Aplikasi Jurnal Trading</h2>
+            <div class="text-sm space-y-3 max-h-[60vh] overflow-y-auto pr-2">
+                <p><strong>1. Halaman Akun:</strong> Mulai dari sini! Buat akun trading pertama Anda. Anda bisa memiliki banyak akun (misal: Akun Real, Akun Lomba, dll). Semua data terpisah per akun.</p>
+                <p><strong>2. Halaman Jurnal:</strong> Setelah memilih akun aktif, catat setiap trade Anda di sini. Gunakan dropdown untuk mempercepat input Pair dan Strategi. Data akan tersimpan otomatis.</p>
+                <p><strong>3. Halaman Analisa:</strong> Lihat performa trading Anda. Kurva ekuitas akan menunjukkan pertumbuhan modal Anda. Analisis AI akan memberikan masukan setelah Anda memiliki beberapa data trade.</p>
+                 <p><strong>4. Halaman Berita:</strong> Dapatkan berita pasar terbaru dari sumber terpercaya. Masukkan pair yang Anda pantau untuk mendapatkan outlook dari AI berdasarkan berita terkini.</p>
+                <p><strong>5. Kalkulator Risiko:</strong> Di halaman 'Akun', gunakan kalkulator untuk menentukan lot size yang aman sesuai toleransi risiko Anda sebelum membuka posisi.</p>
             </div>
         </div>
     </div>
@@ -370,7 +407,7 @@
         const auth = getAuth(app);
         const provider = new GoogleAuthProvider();
 
-        let equityChart;
+        let equityChart, pairChart, strategyChart;
         let activeAccountId = null;
         let allAccounts = [];
         let allTrades = [];
@@ -384,7 +421,7 @@
             loginBtn: document.getElementById('login-btn'),
             logoutBtn: document.getElementById('logout-btn'),
             bottomNav: document.getElementById('bottom-nav'),
-            fab: document.getElementById('fab'),
+            fabContainer: document.querySelector('.fab-container'),
             views: document.querySelectorAll('.view'),
             navItems: document.querySelectorAll('.nav-item'),
             activeAccountName: document.getElementById('active-account-name'),
@@ -396,29 +433,42 @@
             pairDataList: document.getElementById('pair-list'),
             strategyDataList: document.getElementById('strategy-list'),
             donationModal: document.getElementById('donation-modal'),
+            educationModal: document.getElementById('education-modal'),
             importModal: document.getElementById('import-modal'),
             newsList: document.getElementById('news-list'),
             aiNewsBtn: document.getElementById('ai-news-btn'),
             aiNewsResult: document.getElementById('ai-news-result')
         };
         
-        function initializeChart() {
-            const ctx = document.getElementById('equity-curve-chart').getContext('2d');
+        function initializeCharts() {
+            // Equity Chart
+            const equityCtx = document.getElementById('equity-curve-chart').getContext('2d');
             if (equityChart) equityChart.destroy();
-            const gradient = ctx.createLinearGradient(0, 0, 0, 350);
+            const gradient = equityCtx.createLinearGradient(0, 0, 0, 350);
             gradient.addColorStop(0, 'rgba(59, 130, 246, 0.2)');
             gradient.addColorStop(1, 'rgba(59, 130, 246, 0)');
-            equityChart = new Chart(ctx, {
+            equityChart = new Chart(equityCtx, {
                 type: 'line',
                 data: { datasets: [{ label: 'Saldo', data: [], borderColor: '#3b82f6', backgroundColor: gradient, fill: true, tension: 0.2, pointRadius: 0, pointHitRadius: 10 }] },
-                options: {
-                    responsive: true, maintainAspectRatio: false,
-                    scales: {
-                        x: { type: 'time', time: { unit: 'day', tooltipFormat: 'PPP' }, ticks: { color: '#1a3b5d' }, grid: { color: '#e5e7eb' } },
-                        y: { title: { display: true, text: 'Saldo Akun', color: '#1a3b5d' }, ticks: { color: '#1a3b5d' }, grid: { color: '#e5e7eb', borderDash: [2, 3] } }
-                    },
-                    plugins: { legend: { display: false } }
-                }
+                options: { responsive: true, maintainAspectRatio: false, scales: { x: { type: 'time', time: { unit: 'day' } }, y: { title: { display: true, text: 'Saldo Akun' } } }, plugins: { legend: { display: false } } }
+            });
+
+            // Pair Performance Chart
+            const pairCtx = document.getElementById('pair-performance-chart').getContext('2d');
+            if(pairChart) pairChart.destroy();
+            pairChart = new Chart(pairCtx, {
+                type: 'doughnut',
+                data: { labels: [], datasets: [{ data: [], backgroundColor: ['#16a34a', '#dc2626'] }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } } }
+            });
+
+            // Strategy Performance Chart
+            const strategyCtx = document.getElementById('strategy-performance-chart').getContext('2d');
+            if(strategyChart) strategyChart.destroy();
+            strategyChart = new Chart(strategyCtx, {
+                type: 'bar',
+                data: { labels: [], datasets: [{ label: 'Total P/L', data: [], backgroundColor: [] }] },
+                options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
             });
         }
         
@@ -431,14 +481,14 @@
                 ui.authScreen.classList.add('hidden');
                 ui.appContent.classList.remove('hidden');
                 ui.bottomNav.classList.remove('hidden');
-                ui.fab.classList.remove('hidden');
+                ui.fabContainer.classList.remove('hidden');
                 ui.userPhoto.src = user.photoURL;
                 initAppForUser(user);
             } else {
                 ui.authScreen.classList.remove('hidden');
                 ui.appContent.classList.add('hidden');
                 ui.bottomNav.classList.add('hidden');
-                ui.fab.classList.add('hidden');
+                ui.fabContainer.classList.add('hidden');
                 if (tradeListenerUnsubscribe) tradeListenerUnsubscribe();
                 if (accountListenerUnsubscribe) accountListenerUnsubscribe();
             }
@@ -591,6 +641,8 @@
              renderTrades();
              updateDashboard();
              updateChart();
+             renderPairPerformanceChart();
+             renderStrategyPerformanceChart();
              generateOverallAnalysis();
              updatePairAndStrategyDataLists();
         }
@@ -755,6 +807,39 @@
             equityChart.update();
         }
 
+        function renderPairPerformanceChart() {
+            const data = allTrades.reduce((acc, trade) => {
+                if(!acc[trade.pair]) {
+                    acc[trade.pair] = { profit: 0, loss: 0 };
+                }
+                if (trade.plCents > 0) acc[trade.pair].profit += trade.plCents;
+                else acc[trade.pair].loss += Math.abs(trade.plCents);
+                return acc;
+            }, {});
+
+            const totalProfit = Object.values(data).reduce((sum, item) => sum + item.profit, 0);
+            const totalLoss = Object.values(data).reduce((sum, item) => sum + item.loss, 0);
+
+            pairChart.data.labels = ['Total Profit', 'Total Loss'];
+            pairChart.data.datasets[0].data = [totalProfit, totalLoss];
+            pairChart.update();
+        }
+
+        function renderStrategyPerformanceChart() {
+             const data = allTrades.reduce((acc, trade) => {
+                if(!acc[trade.strategy]) acc[trade.strategy] = 0;
+                acc[trade.strategy] += trade.plCents;
+                return acc;
+            }, {});
+
+            const sortedStrategies = Object.entries(data).sort((a,b) => b[1] - a[1]);
+
+            strategyChart.data.labels = sortedStrategies.map(item => item[0]);
+            strategyChart.data.datasets[0].data = sortedStrategies.map(item => item[1]);
+            strategyChart.data.datasets[0].backgroundColor = sortedStrategies.map(item => item[1] > 0 ? '#16a34a' : '#dc2626');
+            strategyChart.update();
+        }
+
         // --- RISK CALC & AI ---
         async function callGeminiAPI(prompt, element) {
             element.innerHTML = '<div class="loader"></div>';
@@ -849,35 +934,49 @@ Gunakan format HTML yang jelas.`;
         // --- NEWS FEATURE ---
         async function fetchNews() {
             ui.newsList.innerHTML = '<div class="loader"></div>';
-            // FIX: Switched to a more reliable JSON-based RSS proxy
             const RSS_TO_JSON_API = "https://api.rss2json.com/v1/api.json?rss_url=";
-            const RSS_URL = encodeURIComponent("https://www.investing.com/rss/news_285.rss"); // Forex News
-            
-            try {
-                const response = await fetch(RSS_TO_JSON_API + RSS_URL);
-                if(!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                const data = await response.json();
+            const investingUrl = encodeURIComponent("https://www.investing.com/rss/news_285.rss");
+            const myfxbookUrl = encodeURIComponent("https://www.myfxbook.com/rss/news");
 
-                if (data.status !== 'ok') {
-                    throw new Error('Gagal mengambil data berita dari API.');
+            try {
+                const [investingRes, myfxbookRes] = await Promise.allSettled([
+                    fetch(RSS_TO_JSON_API + investingUrl),
+                    fetch(RSS_TO_JSON_API + myfxbookUrl)
+                ]);
+
+                let allItems = [];
+
+                if (investingRes.status === 'fulfilled' && investingRes.value.ok) {
+                    const data = await investingRes.value.json();
+                    if (data.status === 'ok') {
+                        allItems = allItems.concat(data.items.map(item => ({...item, source: 'Investing.com'})));
+                    }
+                }
+
+                if (myfxbookRes.status === 'fulfilled' && myfxbookRes.value.ok) {
+                    const data = await myfxbookRes.value.json();
+                     if (data.status === 'ok') {
+                        allItems = allItems.concat(data.items.map(item => ({...item, source: 'Myfxbook'})));
+                    }
                 }
                 
-                const items = data.items;
-                newsCache = [];
-                let html = "";
-                items.forEach(item => {
+                if (allItems.length === 0) throw new Error("Gagal mengambil berita dari semua sumber.");
+
+                allItems.sort((a,b) => new Date(b.pubDate) - new Date(a.pubDate));
+                newsCache = allItems.map(item => item.title);
+
+                let html = allItems.map(item => {
                     const title = item.title;
                     const link = item.link;
-                    // Clean up description from HTML tags
                     const description = item.description.replace(/<[^>]*>?/gm, '').split('.').slice(0, 2).join('.') + '.';
-                    newsCache.push(title);
-                    html += `
+                    return `
                         <div class="p-3 border-b border-gray-200">
                             <a href="${link}" target="_blank" class="font-bold hover:text-blue-600">${title}</a>
+                            <p class="text-xs text-gray-500 mt-1">${item.source}</p>
                             <p class="text-sm text-gray-600 mt-1">${description}</p>
                         </div>
                     `;
-                });
+                }).join('');
                 ui.newsList.innerHTML = html;
             } catch(error) {
                 ui.newsList.innerHTML = `<p class="text-red-500">Gagal memuat berita. Sumber data mungkin sedang tidak tersedia. Silakan coba lagi nanti.</p>`;
@@ -964,7 +1063,6 @@ Gunakan format HTML yang jelas.`;
                 
                 // --- MT4/5 Detection ---
                 if (lines[0].includes("Login") && lines[1].includes("Name")) { 
-                    // This is likely an MT4/5 detailed report. Find the table.
                     let dataStartIndex = -1;
                     for(let i=0; i<lines.length; i++) {
                         if(lines[i].toLowerCase().includes('ticket,open time,type,size,item,price,s/l')) {
@@ -972,34 +1070,27 @@ Gunakan format HTML yang jelas.`;
                             break;
                         }
                     }
-
                     if(dataStartIndex === -1) {
-                        importStatus.textContent = "Format Laporan MetaTrader tidak dikenali. Pastikan ini adalah laporan riwayat yang lengkap.";
+                        importStatus.textContent = "Format Laporan MetaTrader tidak dikenali.";
                         return;
                     }
 
                     for (let i = dataStartIndex; i < lines.length; i++) {
                         const columns = lines[i].split(',');
                         if (columns.length < 11 || columns[0] === '' || columns[2] !== 'buy' && columns[2] !== 'sell') continue;
-                        
                         tradesToImport.push({
-                            pair: columns[4].toUpperCase(),
-                            lotSize: parseFloat(columns[3]),
-                            strategy: "Impor dari MT",
-                            position: columns[2], // 'buy' or 'sell'
-                            plCents: parseFloat(columns[10]), // Profit column
-                            notes: `Diimpor dari MT. Tiket: ${columns[0]}`,
-                            createdAt: new Date(columns[1].replace(/\./g, '/')) // Adjust date format
+                            pair: columns[4].toUpperCase(), lotSize: parseFloat(columns[3]), strategy: "Impor dari MT",
+                            position: columns[2], plCents: parseFloat(columns[10]),
+                            notes: `Diimpor dari MT. Tiket: ${columns[0]}`, createdAt: new Date(columns[1].replace(/\./g, '/'))
                         });
                     }
 
                 } else { // --- Template Detection ---
                     const requiredHeaders = ['pair', 'position', 'profit'];
                     if (!requiredHeaders.every(h => headers.includes(h))) {
-                        importStatus.textContent = 'File CSV tidak valid. Pastikan menggunakan template yang benar.';
+                        importStatus.textContent = 'File CSV tidak valid. Gunakan template.';
                         return;
                     }
-
                     for (let i = 1; i < lines.length; i++) {
                         if (!lines[i]) continue;
                         const columns = lines[i].split(',');
@@ -1007,21 +1098,17 @@ Gunakan format HTML yang jelas.`;
                         headers.forEach((header, index) => {
                             trade[header.trim()] = columns[index]?.trim().replace(/"/g, '');
                         });
-                        
                         tradesToImport.push({
-                            pair: trade.pair?.toUpperCase() || "UNKNOWN",
-                            lotSize: parseFloat(trade.lotSize) || 0.01,
-                            strategy: trade.strategy || "Impor",
-                            position: trade.position || "buy",
-                            plCents: parseFloat(trade.profit) || 0,
-                            notes: trade.notes || "Diimpor dari CSV",
+                            pair: trade.pair?.toUpperCase() || "UNKNOWN", lotSize: parseFloat(trade.lotSize) || 0.01,
+                            strategy: trade.strategy || "Impor", position: trade.position || "buy",
+                            plCents: parseFloat(trade.profit) || 0, notes: trade.notes || "Diimpor dari CSV",
                             createdAt: trade.date ? new Date(trade.date) : new Date()
                         });
                     }
                 }
 
                 if(tradesToImport.length > 0) {
-                     importStatus.innerHTML = `<div class="loader"></div><p>Menyimpan ${tradesToImport.length} trade ke database...</p>`;
+                     importStatus.innerHTML = `<div class="loader"></div><p>Menyimpan ${tradesToImport.length} trade...</p>`;
                      const tradesPath = `users/${auth.currentUser.uid}/accounts/${activeAccountId}/trades`;
                      const batch = writeBatch(db);
                      tradesToImport.forEach(trade => {
@@ -1065,9 +1152,10 @@ Gunakan format HTML yang jelas.`;
                 if (e.target === modal) modal.classList.add('hidden');
             });
         });
-        ui.fab.addEventListener('click', () => ui.donationModal.classList.remove('hidden'));
+        document.getElementById('donation-fab').addEventListener('click', () => ui.donationModal.classList.remove('hidden'));
+        document.getElementById('education-fab').addEventListener('click', () => document.getElementById('education-modal').classList.remove('hidden'));
         
-        initializeChart();
+        initializeCharts();
     </script>
 </body>
 </html>
