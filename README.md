@@ -1,97 +1,72 @@
 Jurnal Trading Cerdas (Advanced)
-Jurnal Trading Cerdas is an advanced, web-based trading journal designed to help forex and market traders track, analyze, and optimize their performance. Built with modern web technologies and integrated with Google's Gemini AI, this tool goes beyond simple logging by providing deep insights, psychological analysis, and data-driven feedback.
+Track, analyze, and optimize your forex and market trading performance with the power of AI.
 
-This application is fully client-side and uses Firebase for backend services, ensuring user data is secure and synchronized across devices.
+Jurnal Trading Cerdas adalah jurnal trading berbasis web yang canggih, dirancang untuk membantu trader forex dan pasar lainnya dalam melacak, menganalisis, dan mengoptimalkan kinerja mereka. Dibangun dengan teknologi web modern dan terintegrasi dengan Gemini AI dari Google, alat ini lebih dari sekadar pencatatan sederhana dengan menyediakan wawasan mendalam, analisis psikologis, dan umpan balik berbasis data.
 
-✨ Features
-🔐 Secure Authentication: Easy and secure login using Google Account (Firebase Auth).
+Aplikasi ini sepenuhnya berjalan di sisi klien (client-side) dan menggunakan Firebase untuk layanan backend, memastikan data pengguna aman dan tersinkronisasi di seluruh perangkat.
 
-🗂️ Multi-Account Management: Create and manage multiple trading accounts (e.g., Real, Demo, Prop Firm) within a single user profile.
+✨ Fitur Utama
+🔐 Otentikasi Aman: Login mudah dan aman menggunakan Akun Google (Firebase Auth).
 
-✍️ Detailed Trade Journaling: Log trades with essential details like pair, lot size, strategy, position, and profit/loss.
+🗂️ Manajemen Multi-Akun: Buat dan kelola beberapa akun trading (misalnya, Real, Demo, Prop Firm) dalam satu profil pengguna.
 
-📊 Advanced Analytics Dashboard:
+✍️ Jurnal Perdagangan Rinci: Catat perdagangan dengan detail penting seperti pasangan mata uang, ukuran lot, strategi, posisi, dan untung/rugi.
 
-Equity Curve: Visualize your account balance growth over time.
+📊 Dasbor Analitik Canggih:
 
-Performance Metrics: Track key stats like total P/L, win rate, and total trades.
+Kurva Ekuitas: Visualisasikan pertumbuhan saldo akun Anda dari waktu ke waktu.
+Metrik Kinerja: Lacak statistik kunci seperti total P/L, win rate, dan jumlah total perdagangan.
+Grafik Donat & Batang: Analisis kinerja berdasarkan pasangan mata uang dan strategi perdagangan.
+🤖 Integrasi AI Gemini:
 
-Doughnut & Bar Charts: Analyze performance broken down by currency pair and trading strategy.
+Analisis Kinerja Keseluruhan: Dapatkan umpan balik yang dihasilkan AI tentang pola trading Anda, kesalahan umum, dan saran untuk perbaikan.
+Analisis Psikologis: Analisis catatan trading Anda untuk setiap perdagangan guna mengidentifikasi bias psikologis seperti FOMO atau keserakahan.
+Kalkulator Risiko AI: Hitung ukuran lot yang optimal berdasarkan saldo akun, persentase risiko, dan stop loss, dengan "pemeriksaan kewarasan" bertenaga AI.
+Prospek Pasar AI: Dapatkan ringkasan sentimen pasar yang dihasilkan AI berdasarkan berita utama terkini.
+📈 Data Pasar Langsung:
 
-🤖 Gemini AI Integration:
+Widget TradingView: Widget grafik terintegrasi untuk analisis pasar secara real-time.
+Kalender Ekonomi: Tetap update dengan berita berdampak tinggi dari Forex Factory.
+Feed Berita Pasar: Agregasi berita dari sumber keuangan terkemuka.
+🔄 Impor & Ekspor CSV: Impor riwayat trading Anda dengan mudah dari MetaTrader (MT4/MT5) atau ekspor data jurnal Anda untuk analisis offline.
 
-Overall Performance Analysis: Get AI-generated feedback on your trading patterns, common mistakes, and suggestions for improvement.
+📱 Desain Sepenuhnya Responsif: Antarmuka yang bersih dan mobile-first dibangun dengan Tailwind CSS memastikan pengalaman yang mulus di perangkat apa pun.
 
-Psychological Analysis: Analyze your trading notes on a per-trade basis to identify psychological biases like FOMO or greed.
-
-AI Risk Calculator: Calculate the optimal lot size based on your account balance, risk percentage, and stop loss, with an AI-powered "sanity check".
-
-AI Market Outlook: Get an AI-generated summary of market sentiment based on the latest news headlines.
-
-📈 Live Market Data:
-
-TradingView Widget: Integrated chart widget for real-time market analysis.
-
-Economic Calendar: Stay updated with high-impact news from Forex Factory.
-
-Market News Feed: Aggregated news from top financial sources.
-
-🔄 CSV Import & Export: Easily import your trading history from MetaTrader (MT4/MT5) or export your journal data for offline analysis.
-
-📱 Fully Responsive Design: A clean, mobile-first interface built with Tailwind CSS ensures a seamless experience on any device.
-
-🛠️ Tech Stack
+🛠️ Tumpukan Teknologi
 Frontend: HTML5, Vanilla JavaScript (ES6 Modules), Tailwind CSS
-
 Backend-as-a-Service (BaaS): Google Firebase
+Authentication: Untuk login dan manajemen pengguna.
+Firestore: Sebagai database NoSQL untuk menyimpan semua data pengguna, akun, dan perdagangan.
+API & Perpustakaan:
+Google Gemini API: Untuk semua fitur analitik bertenaga AI.
+Chart.js: Untuk membuat grafik dan diagram interaktif.
+TradingView: Untuk grafik pasar yang dapat disematkan.
+RSS2JSON: Untuk mengurai feed RSS untuk berita dan kalender ekonomi.
+🚀 Memulai
+Untuk menjalankan proyek ini secara lokal, Anda akan memerlukan kunci API Anda sendiri untuk Firebase dan Google Gemini.
 
-Authentication: For user login and management.
+Clone Repositori:
 
-Firestore: As the NoSQL database for storing all user, account, and trade data.
-
-APIs & Libraries:
-
-Google Gemini API: For all AI-powered analytical features.
-
-Chart.js: For creating interactive charts and graphs.
-
-TradingView: For embeddable market charts.
-
-RSS2JSON: To parse RSS feeds for news and the economic calendar.
-
-🚀 Getting Started
-To run this project locally, you will need your own API keys for Firebase and Google Gemini.
-
-Clone the repository:
-
+Bash
 git clone https://github.com/your-username/jurnal-trading-cerdas.git
 cd jurnal-trading-cerdas
+ Konfigurasi Firebase:
+a. Buka Konsol Firebase dan buat proyek baru.
+b. Aktifkan Google Authentication di tab Authentication -> Sign-in method.
+c. Buat Cloud Firestore Database dan atur aturan keamanan (security rules) untuk mengizinkan baca/tulis bagi pengguna yang terotentikasi.
+d. Di pengaturan proyek Anda (Project Settings), temukan objek konfigurasi Firebase Anda.
 
-Configure Firebase:
+Dapatkan Kunci API Google Gemini:
+a. Buka Google AI Studio dan buat kunci API.
 
-Go to the Firebase Console and create a new project.
+Perbarui Kode:
+a. Buka file index.html.
+b. Temukan bagian <script type="module"> di bagian bawah.
+c. Ganti placeholder objek firebaseConfig dengan konfigurasi Firebase Anda sendiri.
+d. Ganti placeholder string geminiApiKey dengan kunci API Google Gemini Anda.
 
-Enable Google Authentication in the Authentication tab.
-
-Create a Firestore Database and set up the security rules to allow read/write for authenticated users.
-
-In your project settings, find your Firebase configuration object.
-
-Get Google Gemini API Key:
-
-Go to Google AI Studio and create an API key.
-
-Update the Code:
-
-Open the HTML file.
-
-Locate the <script type="module"> section at the bottom.
-
-Replace the placeholder firebaseConfig object with your own Firebase configuration.
-
-Replace the placeholder geminiApiKey string with your own Google Gemini API key.
-
-// Your web app's Firebase configuration
+JavaScript
+// Konfigurasi Firebase aplikasi web Anda
 const firebaseConfig = {
   apiKey: "YOUR_FIREBASE_API_KEY",
   authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
@@ -102,29 +77,19 @@ const firebaseConfig = {
 };
 
 const geminiApiKey = "YOUR_GEMINI_API_KEY";
+ Jalankan Aplikasi:
+Cukup buka file index.html di browser web Anda. Tidak diperlukan server web.
 
-Run the application:
-
-Simply open the index.html file in your web browser. No web server is needed.
-
-📖 How to Use
-Login: Open the application and log in with your Google account.
-
-Create an Account: Navigate to the Akun tab and create your first trading account by giving it a name and setting an initial balance.
-
-Select Active Account: Click on the newly created account to set it as active. The app will now log all trades to this account.
-
-Log a Trade: Go to the Jurnal tab to record a new trade. Fill in the form and save.
-
-Analyze Performance: Switch to the Analisa tab to see your equity curve and performance charts update in real-time.
-
-Get AI Insights: Use the AI features in the Analisa, Akun (Risk Calculator), and Jurnal (Mindset Analysis) tabs to gain deeper insights.
-
-Stay Informed: Check the Berita and Pasar tabs for the latest market news and charts.
-
-👤 Author
+📖 Cara Menggunakan
+Login: Buka aplikasi dan masuk dengan akun Google Anda.
+Buat Akun: Navigasikan ke tab Akun dan buat akun trading pertama Anda dengan memberinya nama dan mengatur saldo awal.
+Pilih Akun Aktif: Klik pada akun yang baru dibuat untuk mengaturnya sebagai aktif. Aplikasi sekarang akan mencatat semua perdagangan ke akun ini.
+Catat Perdagangan: Buka tab Jurnal untuk mencatat perdagangan baru. Isi formulir dan simpan.
+Analisis Kinerja: Pindah ke tab Analisa untuk melihat kurva ekuitas dan grafik kinerja Anda diperbarui secara real-time.
+Dapatkan Wawasan AI: Gunakan fitur AI di tab Analisa, Akun (Kalkulator Risiko), dan Jurnal (Analisis Mindset) untuk mendapatkan wawasan yang lebih dalam.
+Tetap Terinformasi: Periksa tab Berita dan Pasar untuk berita pasar dan grafik terbaru.
+👤 Penulis
 Nabhan Yuzqi Al Mubarok
 
-📄 License
-This project is open-source. Feel free to fork, modify, and use it for your personal needs.
-
+📄 Lisensi
+Proyek ini bersifat open-source. Jangan ragu untuk melakukan fork, memodifikasi, dan menggunakannya untuk kebutuhan pribadi Anda.
