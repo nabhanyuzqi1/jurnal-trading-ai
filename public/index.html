@@ -674,7 +674,7 @@
                 lotSize: parseFloat(document.getElementById('lot-size').value),
                 strategy: document.getElementById('strategy').value,
                 position: document.getElementById('position').value,
-                plCents: parseFloat(document.getElementById('profit-loss').value),
+                pl: parseFloat(document.getElementById('profit-loss').value),
                 notes: document.getElementById('notes').value,
             };
 
@@ -709,7 +709,7 @@
             document.getElementById('lot-size').value = trade.lotSize;
             document.getElementById('strategy').value = trade.strategy;
             document.getElementById('position').value = trade.position;
-            document.getElementById('profit-loss').value = trade.plCents;
+            document.getElementById('profit-loss').value = trade.pl;
             document.getElementById('notes').value = trade.notes;
             document.getElementById('form-title').textContent = 'Edit Trade';
             document.getElementById('submit-btn').textContent = 'Update Trade';
@@ -734,9 +734,9 @@
             allTrades.forEach(trade => {
                 const row = document.createElement('tr');
                 row.className = 'border-b hover:bg-gray-50';
-                const plClass = trade.plCents >= 0 ? 'positive-profit' : 'negative-profit';
+                const plClass = trade.pl >= 0 ? 'positive-profit' : 'negative-profit';
                 const tradeDate = trade.createdAt?.toDate().toLocaleDateString('id-ID') || '...';
-                const plDisplay = getActiveAccount()?.currency === 'USD' ? `$${(trade.plCents).toFixed(2)}` : `${trade.plCents.toFixed(2)} sen`;
+                const plDisplay = getActiveAccount()?.currency === 'USD' ? `$${(trade.pl).toFixed(2)}` : `${(trade.pl).toFixed(2)} sen`;
                 row.innerHTML = `
                     <td class="px-4 py-3">${tradeDate}</td>
                     <td class="px-4 py-3 font-bold">${trade.pair}</td>
@@ -765,10 +765,10 @@
             const startBalance = activeAccount?.startBalance || 0;
             const currency = activeAccount?.currency || 'cent';
 
-            const totalPL = allTrades.reduce((acc, trade) => acc + trade.plCents, 0);
+            const totalPL = allTrades.reduce((acc, trade) => acc + trade.pl, 0);
             const currentBalance = startBalance + totalPL;
-            const wins = allTrades.filter(trade => trade.plCents > 0).length;
-            const losses = allTrades.filter(trade => trade.plCents < 0).length;
+            const wins = allTrades.filter(trade => trade.pl > 0).length;
+            const losses = allTrades.filter(trade => trade.pl < 0).length;
             const winRate = (wins + losses) > 0 ? (wins / (wins + losses)) * 100 : 0;
             
             const formatCurrency = (amount) => currency === 'USD' ? `$${amount.toFixed(2)}` : `${amount.toFixed(0)} sen`;
@@ -797,7 +797,7 @@
             
             allTrades.forEach(trade => {
                 if (trade.createdAt && trade.createdAt.toDate) {
-                    runningBalance += trade.plCents;
+                    runningBalance += trade.pl;
                     chartData.push({ x: trade.createdAt.toDate(), y: runningBalance });
                 }
             });
@@ -812,8 +812,8 @@
                 if(!acc[trade.pair]) {
                     acc[trade.pair] = { profit: 0, loss: 0 };
                 }
-                if (trade.plCents > 0) acc[trade.pair].profit += trade.plCents;
-                else acc[trade.pair].loss += Math.abs(trade.plCents);
+                if (trade.pl > 0) acc[trade.pair].profit += trade.pl;
+                else acc[trade.pair].loss += Math.abs(trade.pl);
                 return acc;
             }, {});
 
@@ -828,7 +828,7 @@
         function renderStrategyPerformanceChart() {
              const data = allTrades.reduce((acc, trade) => {
                 if(!acc[trade.strategy]) acc[trade.strategy] = 0;
-                acc[trade.strategy] += trade.plCents;
+                acc[trade.strategy] += trade.pl;
                 return acc;
             }, {});
 
@@ -863,24 +863,30 @@
 
             const slPips = parseFloat(document.getElementById('stop-loss').value);
             const riskPercent = parseFloat(document.getElementById('risk-percent').value);
-            const totalPL = allTrades.reduce((acc, trade) => acc + trade.plCents, 0);
+            const totalPL = allTrades.reduce((acc, trade) => acc + trade.pl, 0);
             const currentBalance = activeAccount.startBalance + totalPL;
 
             if (isNaN(slPips) || isNaN(riskPercent) || slPips <= 0 || riskPercent <= 0) return;
 
             const riskAmount = currentBalance * (riskPercent / 100);
-            
             const pipValuePerStandardLotUSD = 10;
             
-            let riskAmountUSD = riskAmount;
+            let riskAmountUSD;
             if (activeAccount.currency === 'cent') {
                 riskAmountUSD = riskAmount / 100;
+            } else {
+                riskAmountUSD = riskAmount;
             }
             
             const valuePerPipUSD = riskAmountUSD / slPips;
             const recommendedLotSize = valuePerPipUSD / pipValuePerStandardLot;
-
-            const lotDisplay = recommendedLotSize.toFixed(2) + ' (Std Lot)';
+            
+            let lotDisplay = recommendedLotSize.toFixed(2) + ' (Std Lot)';
+            if (activeAccount.currency === 'cent') {
+                const centLotSize = recommendedLotSize * 100;
+                lotDisplay = centLotSize.toFixed(2) + ' (Cent Lot)';
+            }
+            
             const riskDisplay = activeAccount.currency === 'cent' ? `${riskAmount.toFixed(2)} sen` : `$${riskAmount.toFixed(2)}`;
 
             document.getElementById('lot-size-result').textContent = lotDisplay;
@@ -909,7 +915,7 @@ Gunakan format HTML yang jelas.`;
                 container.innerHTML = '<p class="text-gray-500">Butuh minimal 3 trade untuk analisis AI.</p>';
                 return;
             }
-            const tradeHistory = allTrades.map(t => ({ pair: t.pair, pl: t.plCents, strategy: t.strategy, notes: t.notes }));
+            const tradeHistory = allTrades.map(t => ({ pair: t.pair, pl: t.pl, strategy: t.strategy, notes: t.notes }));
             const prompt = `Anda adalah mentor trading. Analisis riwayat trading ini. Berikan masukan tajam format poin-poin HTML (<ul><li>). Sertakan juga ringkasan dari trade dengan profit terbesar dan loss terbesar sebagai contoh. Fokus pada: pola profit/loss, strategi/pair terbaik & terburuk, kesalahan psikologis dari catatan, dan 1-2 saran perbaikan terpenting. Data: ${JSON.stringify(tradeHistory)}`;
             callGeminiAPI(prompt, container);
         }
@@ -920,7 +926,7 @@ Gunakan format HTML yang jelas.`;
             const modal = document.getElementById('mindset-modal');
             const modalBody = document.getElementById('mindset-modal-body');
             modal.classList.remove('hidden');
-            const prompt = `Anda adalah psikolog trading. Analisis catatan dari satu trade ini: Pair: ${trade.pair}, Profit/Loss: ${trade.plCents} ${getActiveAccount()?.currency}, Catatan: "${trade.notes}". Berikan analisis psikologis membangun 1-2 paragraf. Identifikasi bias (FOMO, dll.) dan berikan satu saran konkret.`;
+            const prompt = `Anda adalah psikolog trading. Analisis catatan dari satu trade ini: Pair: ${trade.pair}, Profit/Loss: ${trade.pl} ${getActiveAccount()?.currency}, Catatan: "${trade.notes}". Berikan analisis psikologis membangun 1-2 paragraf. Identifikasi bias (FOMO, dll.) dan berikan satu saran konkret.`;
             callGeminiAPI(prompt, modalBody);
         }
         
@@ -1003,7 +1009,7 @@ Gunakan format HTML yang jelas.`;
                     trade.lotSize,
                     `"${trade.strategy.replace(/"/g, '""')}"`,
                     trade.position,
-                    trade.plCents,
+                    trade.pl,
                     `"${trade.notes.replace(/"/g, '""')}"`,
                     date
                 ];
@@ -1073,7 +1079,7 @@ Gunakan format HTML yang jelas.`;
                         if (columns.length < 11 || columns[0] === '' || columns[2] !== 'buy' && columns[2] !== 'sell') continue;
                         tradesToImport.push({
                             pair: columns[4].toUpperCase(), lotSize: parseFloat(columns[3]), strategy: "Impor dari MT",
-                            position: columns[2], plCents: parseFloat(columns[10]),
+                            position: columns[2], pl: parseFloat(columns[10]),
                             notes: `Diimpor dari MT. Tiket: ${columns[0]}`, createdAt: new Date(columns[1].replace(/\./g, '/'))
                         });
                     }
@@ -1094,7 +1100,7 @@ Gunakan format HTML yang jelas.`;
                         tradesToImport.push({
                             pair: trade.pair?.toUpperCase() || "UNKNOWN", lotSize: parseFloat(trade.lotSize) || 0.01,
                             strategy: trade.strategy || "Impor", position: trade.position || "buy",
-                            plCents: parseFloat(trade.profit) || 0, notes: trade.notes || "Diimpor dari CSV",
+                            pl: parseFloat(trade.profit) || 0, notes: trade.notes || "Diimpor dari CSV",
                             createdAt: trade.date ? new Date(trade.date) : new Date()
                         });
                     }
