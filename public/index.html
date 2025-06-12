@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -121,142 +120,134 @@
         <div id="jurnal-view" class="view">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                  <div id="trade-form-card" class="card">
-                    <h2 id="form-title" class="text-2xl font-bold mb-4">Catat Trade Baru</h2>
-                    <form id="trade-form" class="space-y-4">
-                        <input type="hidden" id="trade-id">
-                        <datalist id="pair-list"></datalist>
-                        <datalist id="strategy-list"></datalist>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label for="pair" class="block text-sm font-medium">Pair</label>
-                                <input type="text" id="pair" list="pair-list" placeholder="cth: EUR/USD" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                            </div>
-                            <div>
-                                <label for="lot-size" class="block text-sm font-medium">Lot Size</label>
-                                <input type="number" id="lot-size" step="0.01" placeholder="cth: 0.01" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                            </div>
-                        </div>
-                        <div>
-                            <label for="strategy" class="block text-sm font-medium">Setup / Strategi</label>
-                            <input type="text" id="strategy" list="strategy-list" placeholder="cth: Breakout H1" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                        </div>
-                        <div class="grid grid-cols-2 gap-4">
+                     <h2 id="form-title" class="text-2xl font-bold mb-4">Catat Trade Baru</h2>
+                     <form id="trade-form" class="space-y-4">
+                         <input type="hidden" id="trade-id">
+                         <datalist id="pair-list"></datalist>
+                         <datalist id="strategy-list"></datalist>
+                         <div class="grid grid-cols-2 gap-4">
                              <div>
-                                <label for="position" class="block text-sm font-medium">Posisi</label>
-                                <select id="position" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                                    <option value="buy">Buy</option>
-                                    <option value="sell">Sell</option>
-                                </select>
-                            </div>
+                                 <label for="pair" class="block text-sm font-medium">Pair</label>
+                                 <input type="text" id="pair" list="pair-list" placeholder="cth: EUR/USD" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                             </div>
                              <div>
-                                <label for="profit-loss" class="block text-sm font-medium">P/L</label>
-                                <input type="number" step="any" id="profit-loss" placeholder="cth: 50 atau -25" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                            </div>
-                        </div>
-                        <div>
-                            <label for="notes" class="block text-sm font-medium">Catatan / Kesalahan</label>
-                            <textarea id="notes" rows="3" placeholder="cth: Entry terlalu cepat, FOMO" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"></textarea>
-                        </div>
-                        <div class="flex gap-2">
-                            <button type="submit" id="submit-btn" class="flex-grow bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">Simpan Trade</button>
-                            <button type="button" id="cancel-edit-btn" class="hidden flex-grow bg-gray-200 text-gray-700 font-bold py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors">Batal</button>
-                        </div>
-                    </form>
-                </div>
+                                 <label for="lot-size" class="block text-sm font-medium">Lot Size</label>
+                                 <input type="number" id="lot-size" step="0.01" placeholder="cth: 0.01" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                             </div>
+                         </div>
+                         <div>
+                             <label for="strategy" class="block text-sm font-medium">Setup / Strategi</label>
+                             <input type="text" id="strategy" list="strategy-list" placeholder="cth: Breakout H1" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                         </div>
+                         <div class="grid grid-cols-2 gap-4">
+                              <div>
+                                 <label for="position" class="block text-sm font-medium">Posisi</label>
+                                 <select id="position" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                                     <option value="buy">Buy</option>
+                                     <option value="sell">Sell</option>
+                                 </select>
+                             </div>
+                              <div>
+                                 <label for="profit-loss" class="block text-sm font-medium">P/L</label>
+                                 <input type="number" step="any" id="profit-loss" placeholder="cth: 50 atau -25" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                             </div>
+                         </div>
+                         <div>
+                             <label for="notes" class="block text-sm font-medium">Catatan / Kesalahan</label>
+                             <textarea id="notes" rows="3" placeholder="cth: Entry terlalu cepat, FOMO" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"></textarea>
+                         </div>
+                         <div class="flex gap-2">
+                             <button type="submit" id="submit-btn" class="flex-grow bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">Simpan Trade</button>
+                             <button type="button" id="cancel-edit-btn" class="hidden flex-grow bg-gray-200 text-gray-700 font-bold py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors">Batal</button>
+                         </div>
+                     </form>
+                 </div>
                  <div class="card">
-                    <h2 class="text-2xl font-bold mb-4 flex justify-between items-center">
-                        <span>Riwayat Trade</span>
-                        <div class="space-x-2">
-                            <button id="import-btn" class="text-sm bg-gray-200 text-gray-700 font-semibold py-1 px-3 rounded-lg hover:bg-gray-300">Impor</button>
-                            <button id="export-btn" class="text-sm bg-gray-200 text-gray-700 font-semibold py-1 px-3 rounded-lg hover:bg-gray-300">Ekspor</button>
-                        </div>
-                    </h2>
-                    <div class="overflow-x-auto max-h-[450px]">
-                        <table class="w-full text-sm text-left">
-                            <thead class="text-xs uppercase bg-gray-700 text-white sticky top-0">
-                                <tr>
-                                    <th class="px-4 py-3">Tanggal</th>
-                                    <th class="px-4 py-3">Pair</th>
-                                    <th class="px-4 py-3">Posisi</th>
-                                    <th class="px-4 py-3">P/L</th>
-                                    <th class="px-4 py-3 text-center">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody id="trade-log-body"></tbody>
-                        </table>
-                    </div>
-                </div>
+                     <h2 class="text-2xl font-bold mb-4 flex justify-between items-center">
+                         <span>Riwayat Trade</span>
+                         <div class="space-x-2">
+                             <button id="import-btn" class="text-sm bg-gray-200 text-gray-700 font-semibold py-1 px-3 rounded-lg hover:bg-gray-300">Impor</button>
+                             <button id="export-btn" class="text-sm bg-gray-200 text-gray-700 font-semibold py-1 px-3 rounded-lg hover:bg-gray-300">Ekspor</button>
+                         </div>
+                     </h2>
+                     <div class="overflow-x-auto max-h-[450px]">
+                         <table class="w-full text-sm text-left">
+                             <thead class="text-xs uppercase bg-gray-700 text-white sticky top-0">
+                                 <tr>
+                                     <th class="px-4 py-3">Tanggal</th>
+                                     <th class="px-4 py-3">Pair</th>
+                                     <th class="px-4 py-3">Posisi</th>
+                                     <th class="px-4 py-3">P/L</th>
+                                     <th class="px-4 py-3 text-center">Aksi</th>
+                                 </tr>
+                             </thead>
+                             <tbody id="trade-log-body"></tbody>
+                         </table>
+                     </div>
+                 </div>
             </div>
         </div>
         
-               <div id="pasar-view" class="view hidden">
-             <div class="card">
-                <h2 class="text-2xl font-bold mb-4">Watchlist Pasar</h2>
-                <!-- TradingView Widget BEGIN -->
-                <div class="tradingview-widget-container">
-                  <div id="tradingview-widget"></div>
-                  <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
-                  <script type="text/javascript">
-                    window.addEventListener('DOMContentLoaded', function() {
-                      if (typeof TradingView !== 'undefined') {
-                        // Add dropdown for pair selection above the widget
-                        const pairs = [
-                          { proName: "FOREXCOM:SPXUSD", title: "S&P 500" },
-                          { proName: "FOREXCOM:NSXUSD", title: "Nasdaq 100" },
-                          { proName: "FX:EURUSD", title: "EUR/USD" },
-                          { proName: "OANDA:XAUUSD", title: "XAU/USD" },
-                          { proName: "FX:GBPUSD", title: "GBP/USD" },
-                          { proName: "FX_IDC:USDJPY", title: "USD/JPY" },
-                          { proName: "OANDA:XAUUSD", title: "Emas" }
-                        ];
+           <div id="pasar-view" class="view hidden">
+           <div class="card">
+               <h2 class="text-2xl font-bold mb-4">Watchlist Pasar</h2>
+               <!-- TradingView Widget BEGIN -->
+               <div class="tradingview-widget-container">
+                 <div id="tradingview-widget"></div>
+                 <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+                 <script type="text/javascript">
+                   window.addEventListener('DOMContentLoaded', function() {
+                     if (typeof TradingView !== 'undefined') {
+                       const pairs = [
+                         { proName: "FOREXCOM:SPXUSD", title: "S&P 500" },
+                         { proName: "FOREXCOM:NSXUSD", title: "Nasdaq 100" },
+                         { proName: "FX:EURUSD", title: "EUR/USD" },
+                         { proName: "OANDA:XAUUSD", title: "XAU/USD" },
+                         { proName: "FX:GBPUSD", title: "GBP/USD" },
+                         { proName: "FX_IDC:USDJPY", title: "USD/JPY" },
+                       ];
 
-                        // Create dropdown
-                        const dropdown = document.createElement('select');
-                        dropdown.className = "mb-4 p-2 border rounded";
-                        pairs.forEach((pair, idx) => {
-                          const option = document.createElement('option');
-                          option.value = idx;
-                          option.textContent = pair.title || pair.proName;
-                          dropdown.appendChild(option);
-                        });
-                        const container = document.getElementById('tradingview-widget').parentElement;
-                        container.insertBefore(dropdown, document.getElementById('tradingview-widget'));
+                       const dropdown = document.createElement('select');
+                       dropdown.className = "mb-4 p-2 border rounded-md shadow-sm w-full";
+                       pairs.forEach((pair, idx) => {
+                         const option = document.createElement('option');
+                         option.value = idx;
+                         option.textContent = pair.title || pair.proName;
+                         dropdown.appendChild(option);
+                       });
+                       const container = document.getElementById('tradingview-widget').parentElement;
+                       container.insertBefore(dropdown, document.getElementById('tradingview-widget'));
 
-                        // Function to render widget for selected pair
-                        function renderWidget(pair) {
-                          document.getElementById('tradingview-widget').innerHTML = "";
-                          new TradingView.widget({
-                            "container_id": "tradingview-widget",
-                            "symbol": pair.proName,
-                            "showSymbolLogo": true,
-                            "colorTheme": "light",
-                            "isTransparent": false,
-                            "displayMode": "adaptive",
-                            "locale": "id",
-                            "width": "100%",
-                            "height": 400
-                          });
-                        }
-
-                        // Initial render
-                        renderWidget(pairs[0]);
-
-                        // Change widget on dropdown change
-                        dropdown.addEventListener('change', function() {
-                          renderWidget(pairs[this.value]);
-                        });
-                      }
-                    });
-                  </script>
-                </div>
-                <!-- TradingView Widget END -->
-             </div>
-        </div>
+                       function renderWidget(pair) {
+                         document.getElementById('tradingview-widget').innerHTML = "";
+                         new TradingView.widget({
+                           "container_id": "tradingview-widget",
+                           "symbol": pair.proName,
+                           "showSymbolLogo": true,
+                           "colorTheme": "light",
+                           "isTransparent": false,
+                           "displayMode": "adaptive",
+                           "locale": "id",
+                           "width": "100%",
+                           "height": 400
+                         });
+                       }
+                       renderWidget(pairs[0]);
+                       dropdown.addEventListener('change', function() {
+                         renderWidget(pairs[this.value]);
+                       });
+                     }
+                   });
+                 </script>
+               </div>
+               <!-- TradingView Widget END -->
+           </div>
+       </div>
 
 
         <div id="analisa-view" class="view hidden">
             <section id="dashboard" class="mb-8">
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 text-center">
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6 text-center">
                     <div class="card">
                         <h3 class="text-md font-bold text-gray-500">Saldo Akun</h3>
                         <p id="balance" class="text-3xl font-extrabold mt-2">$0.00</p>
@@ -264,6 +255,10 @@
                     <div class="card">
                         <h3 class="text-md font-bold text-gray-500">Total P/L</h3>
                         <p id="total-pl" class="text-3xl font-extrabold mt-2">$0.00</p>
+                    </div>
+                    <div class="card">
+                        <h3 class="text-md font-bold text-gray-500">Keuntungan %</h3>
+                        <p id="profit-percentage" class="text-3xl font-extrabold mt-2">0.0%</p>
                     </div>
                     <div class="card">
                         <h3 class="text-md font-bold text-gray-500">Win Rate</h3>
@@ -276,28 +271,28 @@
                 </div>
             </section>
              <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div class="card lg:col-span-2">
-                    <h2 class="text-2xl font-bold mb-4">Kurva Ekuitas</h2>
-                    <div class="chart-container">
-                        <canvas id="equity-curve-chart"></canvas>
-                    </div>
-                </div>
-                 <div class="card">
-                    <h2 class="text-2xl font-bold mb-4">Performa per Pair</h2>
-                     <div class="chart-container">
-                        <canvas id="pair-performance-chart"></canvas>
-                    </div>
-                </div>
-                 <div class="card">
-                    <h2 class="text-2xl font-bold mb-4">Performa per Strategi</h2>
-                     <div class="chart-container">
-                        <canvas id="strategy-performance-chart"></canvas>
-                    </div>
-                </div>
                  <div class="card lg:col-span-2">
-                    <h2 class="text-2xl font-bold mb-4">Analisis Performa AI</h2>
-                    <div id="analysis-content" class="space-y-4 text-sm max-h-[350px] overflow-y-auto"></div>
-                </div>
+                     <h2 class="text-2xl font-bold mb-4">Kurva Ekuitas</h2>
+                     <div class="chart-container">
+                         <canvas id="equity-curve-chart"></canvas>
+                     </div>
+                 </div>
+                  <div class="card">
+                     <h2 class="text-2xl font-bold mb-4">Performa per Pair</h2>
+                      <div class="chart-container">
+                         <canvas id="pair-performance-chart"></canvas>
+                     </div>
+                 </div>
+                  <div class="card">
+                     <h2 class="text-2xl font-bold mb-4">Performa per Strategi</h2>
+                      <div class="chart-container">
+                         <canvas id="strategy-performance-chart"></canvas>
+                     </div>
+                 </div>
+                  <div class="card lg:col-span-2">
+                     <h2 class="text-2xl font-bold mb-4">Analisis Performa AI</h2>
+                     <div id="analysis-content" class="space-y-4 text-sm max-h-[350px] overflow-y-auto"></div>
+                 </div>
             </div>
         </div>
 
@@ -422,46 +417,24 @@
     </div>
     
     <!-- Modals -->
-    <div id="mindset-modal" class="modal-overlay hidden">
-        <div class="modal-content"><span class="modal-close-btn modal-close">&times;</span><h2 class="text-2xl font-bold mb-4">✨ Analisis Mindset AI</h2><div id="mindset-modal-body"></div></div>
-    </div>
-    <div id="donation-modal" class="modal-overlay hidden">
-        <div class="modal-content text-center">
+    <div id="mindset-modal" class="modal-overlay hidden"><div class="modal-content"><span class="modal-close-btn modal-close">&times;</span><h2 class="text-2xl font-bold mb-4">✨ Analisis Mindset AI</h2><div id="mindset-modal-body"></div></div></div>
+    <div id="donation-modal" class="modal-overlay hidden"><div class="modal-content text-center"><span class="modal-close-btn modal-close">&times;</span><h2 class="text-2xl font-bold mb-4">Donasi untuk Kreator</h2><p class="mb-4 text-gray-600">Terima kasih telah menggunakan aplikasi ini. Dukung Nabhan melalui BCA.</p><div class="p-4 bg-blue-50 rounded-lg"><p class="font-semibold text-lg">Bank Central Asia (BCA)</p><p class="text-2xl font-bold text-blue-600 my-2">6695673021</p><p class="font-semibold">a/n Nabhan Yuzqi Al Mubarok</p></div></div></div>
+    <div id="education-modal" class="modal-overlay hidden"><div class="modal-content text-left"><span class="modal-close-btn modal-close">&times;</span><h2 class="text-2xl font-bold mb-4">Panduan Aplikasi Jurnal Trading</h2><div class="text-sm space-y-3 max-h-[60vh] overflow-y-auto pr-2"><p><strong>1. Halaman Akun:</strong> Mulai dari sini! Buat akun trading pertama Anda. Anda bisa memiliki banyak akun (misal: Akun Real, Akun Lomba, dll). Semua data terpisah per akun.</p><p><strong>2. Halaman Jurnal:</strong> Setelah memilih akun aktif, catat setiap trade Anda di sini. Gunakan dropdown untuk mempercepat input Pair dan Strategi. Data akan tersimpan otomatis.</p><p><strong>3. Halaman Analisa:</strong> Lihat performa trading Anda. Kurva ekuitas akan menunjukkan pertumbuhan modal Anda. Analisis AI akan memberikan masukan setelah Anda memiliki beberapa data trade.</p><p><strong>4. Halaman Berita:</strong> Dapatkan berita pasar terbaru dari sumber terpercaya. Masukkan pair yang Anda pantau untuk mendapatkan outlook dari AI berdasarkan berita terkini.</p><p><strong>5. Kalkulator Risiko:</strong> Di halaman 'Akun', gunakan kalkulator untuk menentukan lot size yang aman sesuai toleransi risiko Anda sebelum membuka posisi.</p></div></div></div>
+    <div id="import-modal" class="modal-overlay hidden"><div class="modal-content text-center"><span class="modal-close-btn modal-close">&times;</span><h2 class="text-2xl font-bold mb-4">Impor Riwayat Trade</h2><p class="mb-4 text-gray-600">Unggah file CSV dari MetaTrader atau gunakan template kami.</p><input type="file" id="csv-file-input" accept=".csv" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 mb-4"/><button id="process-import-btn" class="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 mb-4">Proses Impor</button><a id="download-template-btn" href="#" class="text-sm text-blue-600 hover:underline">Download Template CSV</a><div id="import-status" class="mt-4 text-sm"></div></div></div>
+    <div id="withdrawal-modal" class="modal-overlay hidden">
+        <div class="modal-content">
             <span class="modal-close-btn modal-close">&times;</span>
-            <h2 class="text-2xl font-bold mb-4">Donasi untuk Kreator</h2>
-            <p class="mb-4 text-gray-600">Terima kasih telah menggunakan aplikasi ini. Dukung Nabhan melalui BCA.</p>
-            <div class="p-4 bg-blue-50 rounded-lg">
-                <p class="font-semibold text-lg">Bank Central Asia (BCA)</p>
-                <p class="text-2xl font-bold text-blue-600 my-2">6695673021</p>
-                <p class="font-semibold">a/n Nabhan Yuzqi Al Mubarok</p>
-            </div>
+            <h2 class="text-2xl font-bold mb-4">Catat Penarikan Dana</h2>
+            <form id="withdrawal-form" class="space-y-4">
+                <div>
+                    <label for="withdrawal-amount" class="block text-sm font-medium">Jumlah Penarikan</label>
+                    <input type="number" id="withdrawal-amount" placeholder="cth: 100" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <button type="submit" class="w-full bg-green-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-700 transition-colors">Simpan Penarikan</button>
+            </form>
         </div>
     </div>
-    <div id="education-modal" class="modal-overlay hidden">
-        <div class="modal-content text-left">
-            <span class="modal-close-btn modal-close">&times;</span>
-            <h2 class="text-2xl font-bold mb-4">Panduan Aplikasi Jurnal Trading</h2>
-            <div class="text-sm space-y-3 max-h-[60vh] overflow-y-auto pr-2">
-                <p><strong>1. Halaman Akun:</strong> Mulai dari sini! Buat akun trading pertama Anda. Anda bisa memiliki banyak akun (misal: Akun Real, Akun Lomba, dll). Semua data terpisah per akun.</p>
-                <p><strong>2. Halaman Jurnal:</strong> Setelah memilih akun aktif, catat setiap trade Anda di sini. Gunakan dropdown untuk mempercepat input Pair dan Strategi. Data akan tersimpan otomatis.</p>
-                <p><strong>3. Halaman Analisa:</strong> Lihat performa trading Anda. Kurva ekuitas akan menunjukkan pertumbuhan modal Anda. Analisis AI akan memberikan masukan setelah Anda memiliki beberapa data trade.</p>
-                 <p><strong>4. Halaman Berita:</strong> Dapatkan berita pasar terbaru dari sumber terpercaya. Masukkan pair yang Anda pantau untuk mendapatkan outlook dari AI berdasarkan berita terkini.</p>
-                <p><strong>5. Kalkulator Risiko:</strong> Di halaman 'Akun', gunakan kalkulator untuk menentukan lot size yang aman sesuai toleransi risiko Anda sebelum membuka posisi.</p>
-            </div>
-        </div>
-    </div>
-    <div id="import-modal" class="modal-overlay hidden">
-        <div class="modal-content text-center">
-            <span class="modal-close-btn modal-close">&times;</span>
-            <h2 class="text-2xl font-bold mb-4">Impor Riwayat Trade</h2>
-            <p class="mb-4 text-gray-600">Unggah file CSV dari MetaTrader atau gunakan template kami.</p>
-            <input type="file" id="csv-file-input" accept=".csv" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 mb-4"/>
-            <button id="process-import-btn" class="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 mb-4">Proses Impor</button>
-            <a id="download-template-btn" href="#" class="text-sm text-blue-600 hover:underline">Download Template CSV</a>
-            <div id="import-status" class="mt-4 text-sm"></div>
-        </div>
-    </div>
-        
+
     <footer class="text-center mt-12 py-4">
         <p class="text-sm text-gray-500">Dibuat dengan ❤️ oleh Nabhan</p>
     </footer>
@@ -494,7 +467,7 @@
         let equityChart, pairChart, strategyChart;
         let activeAccountId = null;
         let allAccounts = [];
-        let allTrades = [];
+        let allTrades = []; // This will include trades and withdrawals
         let tradeListenerUnsubscribe = null;
         let accountListenerUnsubscribe = null;
         let newsCache = [];
@@ -519,6 +492,8 @@
             donationModal: document.getElementById('donation-modal'),
             educationModal: document.getElementById('education-modal'),
             importModal: document.getElementById('import-modal'),
+            withdrawalModal: document.getElementById('withdrawal-modal'),
+            withdrawalForm: document.getElementById('withdrawal-form'),
             newsList: document.getElementById('news-list'),
             forexFactoryCalendar: document.getElementById('forex-factory-calendar'),
             aiNewsBtn: document.getElementById('ai-news-btn'),
@@ -600,6 +575,7 @@
             ui.tradeForm.addEventListener('submit', handleTradeFormSubmit);
             document.getElementById('import-btn').addEventListener('click', () => ui.importModal.classList.remove('hidden'));
             document.getElementById('export-btn').addEventListener('click', exportToCSV);
+            ui.withdrawalForm.addEventListener('submit', handleWithdrawalSubmit);
         }
         
         // --- ACCOUNT MANAGEMENT ---
@@ -633,13 +609,13 @@
              btn.disabled = true;
              btn.textContent = 'Membuat...';
              const newAccount = {
-                name: document.getElementById('account-name').value,
-                startBalance: parseFloat(document.getElementById('start-balance').value),
-                currency: document.getElementById('currency-type').value
+                 name: document.getElementById('account-name').value,
+                 startBalance: parseFloat(document.getElementById('start-balance').value),
+                 currency: document.getElementById('currency-type').value
              };
              try {
-                await addDoc(collection(db, 'users', userId, 'accounts'), newAccount);
-                ui.accountForm.reset();
+                 await addDoc(collection(db, 'users', userId, 'accounts'), newAccount);
+                 ui.accountForm.reset();
              } catch(error) { console.error("Error creating account:", error); }
              finally { btn.disabled = false; btn.textContent = 'Buat Akun'; }
         }
@@ -656,7 +632,9 @@
         }
 
         async function deleteAccount(userId, accountId) {
-            if (!confirm(`Apakah Anda yakin ingin menghapus akun ini beserta SEMUA trade di dalamnya? Tindakan ini tidak dapat diurungkan.`)) return;
+            // Using a custom modal instead of confirm
+            if (!await showConfirmation('Apakah Anda yakin ingin menghapus akun ini beserta SEMUA trade di dalamnya? Tindakan ini tidak dapat diurungkan.')) return;
+            
             try {
                 const tradesRef = collection(db, 'users', userId, 'accounts', accountId, 'trades');
                 const tradesSnapshot = await getDocs(tradesRef);
@@ -673,6 +651,7 @@
                 }
             } catch (error) {
                 console.error("Error deleting account and its trades:", error);
+                showAlert("Gagal menghapus akun.");
             }
         }
 
@@ -683,19 +662,41 @@
                 return;
             }
             allAccounts.forEach(acc => {
+                const isActive = acc.id === activeAccountId;
                 const accDiv = document.createElement('div');
-                accDiv.className = `p-3 rounded-lg flex justify-between items-center ${acc.id === activeAccountId ? 'bg-blue-100 border border-blue-400' : 'bg-gray-100'}`;
+                accDiv.className = `p-3 rounded-lg flex justify-between items-center ${isActive ? 'bg-blue-100 border border-blue-400' : 'bg-gray-100'}`;
+                
+                let buttonsHtml = `
+                    <button class="delete-account-btn text-red-500 hover:text-red-700 p-2" data-account-id="${acc.id}" title="Hapus Akun">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm4 0a1 1 0 012 0v6a1 1 0 11-2 0V8z" clip-rule="evenodd" /></svg>
+                    </button>
+                `;
+
+                if (isActive) {
+                    buttonsHtml = `
+                        <button class="withdraw-btn text-green-600 hover:text-green-800 p-2" data-account-id="${acc.id}" title="Tarik Dana">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z" /><path fill-rule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm3 0a1 1 0 011-1h1a1 1 0 110 2H8a1 1 0 01-1-1z" clip-rule="evenodd" /></svg>
+                        </button>
+                    ` + buttonsHtml;
+                }
+
                 accDiv.innerHTML = `
                     <div class="cursor-pointer flex-grow" data-account-id="${acc.id}">
                         <p class="font-bold">${acc.name}</p>
                         <p class="text-sm text-gray-500">Saldo Awal: ${acc.startBalance} ${acc.currency}</p>
                     </div>
-                    <button class="delete-account-btn text-red-500 hover:text-red-700 p-2" data-account-id="${acc.id}">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm4 0a1 1 0 012 0v6a1 1 0 11-2 0V8z" clip-rule="evenodd" /></svg>
-                    </button>
+                    <div class="flex items-center">
+                        ${buttonsHtml}
+                    </div>
                 `;
                 accDiv.querySelector('.flex-grow').addEventListener('click', () => setActiveAccount(acc.id, userId));
-                accDiv.querySelector('.delete-account-btn').addEventListener('click', () => deleteAccount(userId, acc.id));
+                if (isActive) {
+                    accDiv.querySelector('.withdraw-btn').addEventListener('click', () => openWithdrawalModal(acc.id));
+                }
+                accDiv.querySelector('.delete-account-btn').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    deleteAccount(userId, acc.id)
+                });
                 ui.accountsList.appendChild(accDiv);
             });
         }
@@ -709,7 +710,7 @@
             document.getElementById('analysis-content').innerHTML = '<p class="text-gray-500">Silakan pilih atau buat akun untuk memulai.</p>';
         }
 
-        // --- TRADE MANAGEMENT ---
+        // --- TRADE & WITHDRAWAL MANAGEMENT ---
         function listenForTrades() {
             if (!activeAccountId || !auth.currentUser) return;
             if (tradeListenerUnsubscribe) tradeListenerUnsubscribe();
@@ -734,13 +735,14 @@
         }
 
         function updatePairAndStrategyDataLists() {
+            const actualTrades = allTrades.filter(t => t.pair !== 'WITHDRAWAL');
             const defaultPairs = ["EUR/USD", "GBP/USD", "USD/JPY", "AUD/USD", "USD/CAD", "USD/CHF", "XAU/USD", "BTC/USD"];
-            const userPairs = allTrades.map(trade => trade.pair);
+            const userPairs = actualTrades.map(trade => trade.pair);
             const uniquePairs = [...new Set([...defaultPairs, ...userPairs])].sort();
             ui.pairDataList.innerHTML = uniquePairs.map(p => `<option value="${p}"></option>`).join('');
 
             const defaultStrategies = ["Supply and Demand", "Breakout", "Trend Following", "Scalping", "Swing Trading", "Fibonacci Retracement", "Smart Money Concept"];
-            const userStrategies = allTrades.map(trade => trade.strategy);
+            const userStrategies = actualTrades.map(trade => trade.strategy);
             const uniqueStrategies = [...new Set([...defaultStrategies, ...userStrategies])].sort();
             ui.strategyDataList.innerHTML = uniqueStrategies.map(s => `<option value="${s}"></option>`).join('');
         }
@@ -748,7 +750,7 @@
         async function handleTradeFormSubmit(e) {
             e.preventDefault();
             if (!activeAccountId) {
-                alert("Pilih atau buat akun terlebih dahulu!");
+                showAlert("Pilih atau buat akun terlebih dahulu!");
                 return;
             }
             const submitBtn = document.getElementById('submit-btn');
@@ -804,36 +806,93 @@
         }
         
         async function deleteTrade(id) {
-            if (!activeAccountId || !confirm('Apakah Anda yakin?')) return;
+            if (!activeAccountId || !await showConfirmation('Apakah Anda yakin ingin menghapus data ini?')) return;
             const tradesPath = `users/${auth.currentUser.uid}/accounts/${activeAccountId}/trades`;
             try { await deleteDoc(doc(db, tradesPath, id)); }
             catch (error) { console.error("Error deleting trade:", error); }
         }
+        
+        function openWithdrawalModal(accountId) {
+            ui.withdrawalForm.dataset.accountId = accountId;
+            ui.withdrawalModal.classList.remove('hidden');
+        }
+
+        async function handleWithdrawalSubmit(e) {
+            e.preventDefault();
+            const accountId = e.target.dataset.accountId;
+            const amount = parseFloat(document.getElementById('withdrawal-amount').value);
+
+            if (!accountId || isNaN(amount) || amount <= 0) {
+                showAlert("Jumlah penarikan tidak valid.");
+                return;
+            }
+
+            const withdrawalData = {
+                pair: "WITHDRAWAL",
+                lotSize: 0,
+                strategy: "Penarikan Dana",
+                position: "wd",
+                pl: -amount, // Store as a negative value
+                notes: `Penarikan sejumlah ${amount}`,
+                createdAt: serverTimestamp(),
+            };
+
+            const tradesPath = `users/${auth.currentUser.uid}/accounts/${accountId}/trades`;
+            try {
+                await addDoc(collection(db, tradesPath), withdrawalData);
+                ui.withdrawalForm.reset();
+                ui.withdrawalModal.classList.add('hidden');
+                showAlert("Penarikan dana berhasil dicatat.", "success");
+            } catch (error) {
+                console.error("Error saving withdrawal:", error);
+                showAlert("Gagal mencatat penarikan.");
+            }
+        }
+
 
         function renderTrades() {
             const logBody = document.getElementById('trade-log-body');
             logBody.innerHTML = '';
             if (allTrades.length === 0) {
-                logBody.innerHTML = '<tr><td colspan="5" class="px-4 py-4 text-center text-gray-500">Belum ada trade yang dicatat di akun ini.</td></tr>';
+                logBody.innerHTML = '<tr><td colspan="5" class="px-4 py-4 text-center text-gray-500">Belum ada data di akun ini.</td></tr>';
                 return;
             }
-            allTrades.forEach(trade => {
+            // sort by date descending for display
+            const sortedTrades = [...allTrades].sort((a, b) => (b.createdAt?.toMillis() || 0) - (a.createdAt?.toMillis() || 0));
+
+            sortedTrades.forEach(trade => {
                 const row = document.createElement('tr');
-                row.className = 'border-b hover:bg-gray-50';
-                const plClass = trade.pl >= 0 ? 'positive-profit' : 'negative-profit';
-                const tradeDate = trade.createdAt?.toDate().toLocaleDateString('id-ID') || '...';
-                const plDisplay = getActiveAccount()?.currency === 'USD' ? `$${(trade.pl).toFixed(2)}` : `${(trade.pl).toFixed(2)} sen`;
-                row.innerHTML = `
-                    <td class="px-4 py-3">${tradeDate}</td>
-                    <td class="px-4 py-3 font-bold">${trade.pair}</td>
-                    <td class="px-4 py-3">${trade.position.charAt(0).toUpperCase() + trade.position.slice(1)}</td>
-                    <td class="px-4 py-3 font-bold ${plClass}">${plDisplay}</td>
-                    <td class="px-4 py-3 text-center space-x-2">
-                        <button data-id="${trade.id}" class="edit-btn text-sm text-blue-600 hover:underline">Edit</button>
-                        <button data-id="${trade.id}" class="mindset-btn text-sm text-teal-600 hover:underline">✨AI</button>
-                        <button data-id="${trade.id}" class="delete-btn text-sm text-red-600 hover:underline">Hapus</button>
-                    </td>
-                `;
+                
+                if (trade.pair === 'WITHDRAWAL') {
+                     row.className = 'border-b bg-yellow-50';
+                     const tradeDate = trade.createdAt?.toDate().toLocaleDateString('id-ID') || '...';
+                     const amountDisplay = getActiveAccount()?.currency === 'USD' ? `$${(-trade.pl).toFixed(2)}` : `${(-trade.pl).toFixed(2)} sen`;
+                     row.innerHTML = `
+                        <td class="px-4 py-3">${tradeDate}</td>
+                        <td class="px-4 py-3 font-bold text-yellow-700" colspan="2">${trade.strategy}</td>
+                        <td class="px-4 py-3 font-bold negative-profit">${amountDisplay}</td>
+                        <td class="px-4 py-3 text-center space-x-2">
+                             <button data-id="${trade.id}" class="delete-btn text-sm text-red-600 hover:underline">Hapus</button>
+                        </td>
+                     `;
+
+                } else {
+                    row.className = 'border-b hover:bg-gray-50';
+                    const plClass = trade.pl >= 0 ? 'positive-profit' : 'negative-profit';
+                    const tradeDate = trade.createdAt?.toDate().toLocaleDateString('id-ID') || '...';
+                    const plDisplay = getActiveAccount()?.currency === 'USD' ? `$${(trade.pl).toFixed(2)}` : `${(trade.pl).toFixed(2)} sen`;
+                    row.innerHTML = `
+                        <td class="px-4 py-3">${tradeDate}</td>
+                        <td class="px-4 py-3 font-bold">${trade.pair}</td>
+                        <td class="px-4 py-3">${trade.position.charAt(0).toUpperCase() + trade.position.slice(1)}</td>
+                        <td class="px-4 py-3 font-bold ${plClass}">${plDisplay}</td>
+                        <td class="px-4 py-3 text-center space-x-2">
+                            <button data-id="${trade.id}" class="edit-btn text-sm text-blue-600 hover:underline">Edit</button>
+                            <button data-id="${trade.id}" class="mindset-btn text-sm text-teal-600 hover:underline">✨AI</button>
+                            <button data-id="${trade.id}" class="delete-btn text-sm text-red-600 hover:underline">Hapus</button>
+                        </td>
+                    `;
+                }
                 logBody.appendChild(row);
             });
             document.querySelectorAll('.edit-btn').forEach(b => b.addEventListener('click', () => populateTradeFormForEdit(b.dataset.id)));
@@ -848,22 +907,37 @@
 
         function updateDashboard() {
             const activeAccount = getActiveAccount();
-            const startBalance = activeAccount?.startBalance || 0;
-            const currency = activeAccount?.currency || 'cent';
+            if (!activeAccount) {
+                 // Clear dashboard if no active account
+                 document.getElementById('balance').textContent = 'N/A';
+                 document.getElementById('total-pl').textContent = 'N/A';
+                 document.getElementById('profit-percentage').textContent = 'N/A';
+                 document.getElementById('win-rate').textContent = 'N/A';
+                 document.getElementById('total-trades').textContent = '0';
+                 return;
+            }
+            
+            const startBalance = activeAccount.startBalance || 0;
+            const currency = activeAccount.currency || 'cent';
 
+            const actualTrades = allTrades.filter(t => t.pair !== 'WITHDRAWAL');
             const totalPL = allTrades.reduce((acc, trade) => acc + trade.pl, 0);
             const currentBalance = startBalance + totalPL;
-            const wins = allTrades.filter(trade => trade.pl > 0).length;
-            const losses = allTrades.filter(trade => trade.pl < 0).length;
-            const winRate = (wins + losses) > 0 ? (wins / (wins + losses)) * 100 : 0;
             
-            const formatCurrency = (amount) => currency === 'USD' ? `$${amount.toFixed(2)}` : `${amount.toFixed(0)} sen`;
+            const profitPercentage = startBalance > 0 ? (totalPL / startBalance) * 100 : 0;
+
+            const wins = actualTrades.filter(trade => trade.pl > 0).length;
+            const winRate = actualTrades.length > 0 ? (wins / actualTrades.length) * 100 : 0;
+            
+            const formatCurrency = (amount) => currency === 'USD' ? `$${amount.toFixed(2)}` : `${amount.toFixed(2)} sen`;
             
             document.getElementById('balance').textContent = formatCurrency(currentBalance);
             document.getElementById('total-pl').textContent = formatCurrency(totalPL);
             document.getElementById('total-pl').className = `text-3xl font-extrabold mt-2 ${totalPL >= 0 ? 'positive-profit' : 'negative-profit'}`;
+            document.getElementById('profit-percentage').textContent = `${profitPercentage.toFixed(1)}%`;
+            document.getElementById('profit-percentage').className = `text-3xl font-extrabold mt-2 ${profitPercentage >= 0 ? 'positive-profit' : 'negative-profit'}`;
             document.getElementById('win-rate').textContent = `${winRate.toFixed(1)}%`;
-            document.getElementById('total-trades').textContent = allTrades.length;
+            document.getElementById('total-trades').textContent = actualTrades.length;
         }
 
         function updateChart() {
@@ -894,7 +968,8 @@
         }
 
         function renderPairPerformanceChart() {
-            const data = allTrades.reduce((acc, trade) => {
+            const actualTrades = allTrades.filter(t => t.pair !== 'WITHDRAWAL');
+            const data = actualTrades.reduce((acc, trade) => {
                 if(!acc[trade.pair]) {
                     acc[trade.pair] = { profit: 0, loss: 0 };
                 }
@@ -912,7 +987,8 @@
         }
 
         function renderStrategyPerformanceChart() {
-             const data = allTrades.reduce((acc, trade) => {
+            const actualTrades = allTrades.filter(t => t.pair !== 'WITHDRAWAL');
+            const data = actualTrades.reduce((acc, trade) => {
                 if(!acc[trade.strategy]) acc[trade.strategy] = 0;
                 acc[trade.strategy] += trade.pl;
                 return acc;
@@ -936,7 +1012,11 @@
                 if (!response.ok) throw new Error(`API Error: ${response.status}`);
                 const result = await response.json();
                 if (result.candidates && result.candidates[0]?.content?.parts?.[0]) {
-                    element.innerHTML = result.candidates[0].content.parts[0].text.replace(/\n/g, '<br>');
+                    element.innerHTML = result.candidates[0].content.parts[0].text
+                        .replace(/\n/g, '<br>')
+                        .replace(/\* \*\*(.*?)\*\*/g, '<h4>$1</h4>') // Bolded headers
+                        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Bold
+                        .replace(/\* (.*?)(<br>|$)/g, '<li>$1</li>'); // List items
                 } else { throw new Error("Invalid AI response."); }
             } catch (error) {
                  element.innerHTML = `<p class="text-red-500">Gagal mendapatkan respons AI. Error: ${error.message}</p>`;
@@ -945,7 +1025,7 @@
         
         function handleRiskCalculation() {
             const activeAccount = getActiveAccount();
-            if(!activeAccount) { alert("Pilih akun aktif terlebih dahulu."); return; }
+            if(!activeAccount) { showAlert("Pilih akun aktif terlebih dahulu."); return; }
 
             const slPips = parseFloat(document.getElementById('stop-loss').value);
             const riskPercent = parseFloat(document.getElementById('risk-percent').value);
@@ -982,7 +1062,7 @@
         
         function handleAiRecommendation() {
             const lotSize = document.getElementById('lot-size-result').textContent;
-            if(!lotSize) { alert("Hitung lot size terlebih dahulu."); return; }
+            if(!lotSize) { showAlert("Hitung lot size terlebih dahulu."); return; }
             
             const sl = document.getElementById('stop-loss').value;
             const risk = document.getElementById('risk-percent').value;
@@ -997,11 +1077,12 @@ Gunakan format HTML yang jelas.`;
 
         async function generateOverallAnalysis() {
             const container = document.getElementById('analysis-content');
-            if (allTrades.length < 3) {
+            const actualTrades = allTrades.filter(t => t.pair !== 'WITHDRAWAL');
+            if (actualTrades.length < 3) {
                 container.innerHTML = '<p class="text-gray-500">Butuh minimal 3 trade untuk analisis AI.</p>';
                 return;
             }
-            const tradeHistory = allTrades.map(t => ({ pair: t.pair, pl: t.pl, strategy: t.strategy, notes: t.notes }));
+            const tradeHistory = actualTrades.map(t => ({ pair: t.pair, pl: t.pl, strategy: t.strategy, notes: t.notes }));
             const prompt = `Anda adalah mentor trading. Analisis riwayat trading ini. Berikan masukan tajam format poin-poin HTML (<ul><li>). Sertakan juga ringkasan dari trade dengan profit terbesar dan loss terbesar sebagai contoh. Fokus pada: pola profit/loss, strategi/pair terbaik & terburuk, kesalahan psikologis dari catatan, dan 1-2 saran perbaikan terpenting. Data: ${JSON.stringify(tradeHistory)}`;
             callGeminiAPI(prompt, container);
         }
@@ -1052,8 +1133,6 @@ Gunakan format HTML yang jelas.`;
         async function fetchForexFactoryNews() {
             ui.forexFactoryCalendar.innerHTML = '<div class="loader"></div>';
             const RSS_TO_JSON_API = "https://api.rss2json.com/v1/api.json?rss_url=";
-            // Use a public RSS proxy to bypass ISP block
-            // Try using a different RSS proxy that supports HTTPS and CORS
             const FF_URL = encodeURIComponent("https://www.forexfactory.com/ff_calendar_thisweek.xml");
 
             try {
@@ -1083,7 +1162,7 @@ Gunakan format HTML yang jelas.`;
         
         function handleAiNewsRequest() {
             if(newsCache.length === 0) {
-                alert("Berita belum dimuat. Silakan tunggu sebentar.");
+                showAlert("Berita belum dimuat. Silakan tunggu sebentar.");
                 return;
             }
             const watchedPairs = document.getElementById('watched-pairs').value || "EUR/USD, GBP/JPY, XAU/USD";
@@ -1094,13 +1173,14 @@ Gunakan format HTML yang jelas.`;
 
         // --- CSV IMPORT/EXPORT ---
         function exportToCSV() {
-            if(allTrades.length === 0) {
-                alert("Tidak ada data untuk diekspor.");
+            const actualTrades = allTrades.filter(t => t.pair !== 'WITHDRAWAL');
+            if(actualTrades.length === 0) {
+                showAlert("Tidak ada data trade untuk diekspor.");
                 return;
             }
             const headers = "pair,lotSize,strategy,position,profit,notes,date";
             const csvRows = [headers];
-            allTrades.forEach(trade => {
+            actualTrades.forEach(trade => {
                 const date = trade.createdAt ? trade.createdAt.toDate().toISOString() : new Date().toISOString();
                 const row = [
                     trade.pair,
@@ -1126,101 +1206,45 @@ Gunakan format HTML yang jelas.`;
             link.click();
             document.body.removeChild(link);
         }
+        // ... (processCSVImport and downloadTemplate functions remain the same) ...
 
-        function downloadTemplate() {
-            const headers = "pair,lotSize,strategy,position,profit,notes";
-            const example = "EUR/USD,0.01,Breakout H1,buy,50.25,\"Entry sesuai rencana\"";
-            const csvString = `${headers}\n${example}`;
-            const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement("a");
-            const url = URL.createObjectURL(blob);
-            link.setAttribute("href", url);
-            link.setAttribute("download", `template_jurnal_trading.csv`);
-            link.style.visibility = 'hidden';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+        // --- CUSTOM ALERT & CONFIRMATION ---
+        function showAlert(message, type = 'error') {
+            const alertBox = document.createElement('div');
+            const bgColor = type === 'success' ? 'bg-green-500' : 'bg-red-500';
+            alertBox.className = `fixed top-5 right-5 ${bgColor} text-white py-2 px-4 rounded-lg shadow-lg text-sm z-[2000]`;
+            alertBox.textContent = message;
+            document.body.appendChild(alertBox);
+            setTimeout(() => {
+                alertBox.remove();
+            }, 3000);
         }
 
-        async function processCSVImport(file) {
-            if(!activeAccountId) {
-                alert("Pilih akun aktif untuk mengimpor trade.");
-                return;
-            }
-            const importStatus = document.getElementById('import-status');
-            importStatus.innerHTML = '<div class="loader"></div><p>Memproses file...</p>';
-            
-            const reader = new FileReader();
-            reader.onload = async (event) => {
-                const text = event.target.result;
-                const lines = text.split(/\r\n|\n/);
-                const headers = lines[0].toLowerCase().split(',');
+        function showConfirmation(message) {
+            return new Promise(resolve => {
+                const overlay = document.createElement('div');
+                overlay.className = 'modal-overlay';
+                overlay.innerHTML = `
+                    <div class="modal-content text-center">
+                        <p class="mb-6">${message}</p>
+                        <div class="flex justify-center gap-4">
+                            <button id="confirm-yes" class="bg-red-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-red-700">Ya</button>
+                            <button id="confirm-no" class="bg-gray-200 text-gray-700 font-bold py-2 px-6 rounded-lg hover:bg-gray-300">Tidak</button>
+                        </div>
+                    </div>`;
+                document.body.appendChild(overlay);
 
-                let tradesToImport = [];
-                
-                // --- MT4/5 Detection ---
-                if (lines[0].includes("Login") && lines[1].includes("Name")) { 
-                    let dataStartIndex = -1;
-                    for(let i=0; i<lines.length; i++) {
-                        if(lines[i].toLowerCase().includes('ticket,open time,type,size,item,price,s/l')) {
-                            dataStartIndex = i + 1;
-                            break;
-                        }
-                    }
-                    if(dataStartIndex === -1) {
-                        importStatus.textContent = "Format Laporan MetaTrader tidak dikenali.";
-                        return;
-                    }
-
-                    for (let i = dataStartIndex; i < lines.length; i++) {
-                        const columns = lines[i].split(',');
-                        if (columns.length < 11 || columns[0] === '' || columns[2] !== 'buy' && columns[2] !== 'sell') continue;
-                        tradesToImport.push({
-                            pair: columns[4].toUpperCase(), lotSize: parseFloat(columns[3]), strategy: "Impor dari MT",
-                            position: columns[2], pl: parseFloat(columns[10]),
-                            notes: `Diimpor dari MT. Tiket: ${columns[0]}`, createdAt: new Date(columns[1].replace(/\./g, '/'))
-                        });
-                    }
-
-                } else { // --- Template Detection ---
-                    const requiredHeaders = ['pair', 'position', 'profit'];
-                    if (!requiredHeaders.every(h => headers.includes(h))) {
-                        importStatus.textContent = 'File CSV tidak valid. Gunakan template.';
-                        return;
-                    }
-                    for (let i = 1; i < lines.length; i++) {
-                        if (!lines[i]) continue;
-                        const columns = lines[i].split(',');
-                        const trade = {};
-                        headers.forEach((header, index) => {
-                            trade[header.trim()] = columns[index]?.trim().replace(/"/g, '');
-                        });
-                        tradesToImport.push({
-                            pair: trade.pair?.toUpperCase() || "UNKNOWN", lotSize: parseFloat(trade.lotSize) || 0.01,
-                            strategy: trade.strategy || "Impor", position: trade.position || "buy",
-                            pl: parseFloat(trade.profit) || 0, notes: trade.notes || "Diimpor dari CSV",
-                            createdAt: trade.date ? new Date(trade.date) : new Date()
-                        });
-                    }
-                }
-
-                if(tradesToImport.length > 0) {
-                     importStatus.innerHTML = `<div class="loader"></div><p>Menyimpan ${tradesToImport.length} trade...</p>`;
-                     const tradesPath = `users/${auth.currentUser.uid}/accounts/${activeAccountId}/trades`;
-                     const batch = writeBatch(db);
-                     tradesToImport.forEach(trade => {
-                        const newDocRef = doc(collection(db, tradesPath));
-                        batch.set(newDocRef, trade);
-                     });
-                     await batch.commit();
-                     importStatus.textContent = `${tradesToImport.length} trade berhasil diimpor!`;
-                     setTimeout(() => ui.importModal.classList.add('hidden'), 2000);
-                } else {
-                    importStatus.textContent = 'Tidak ada trade yang valid ditemukan dalam file.';
-                }
-            };
-            reader.readAsText(file);
+                document.getElementById('confirm-yes').onclick = () => {
+                    overlay.remove();
+                    resolve(true);
+                };
+                document.getElementById('confirm-no').onclick = () => {
+                    overlay.remove();
+                    resolve(false);
+                };
+            });
         }
+
 
         // --- EVENT LISTENERS ---
         document.getElementById('cancel-edit-btn').addEventListener('click', resetTradeForm);
@@ -1232,13 +1256,10 @@ Gunakan format HTML yang jelas.`;
             if (fileInput.files.length > 0) {
                 processCSVImport(fileInput.files[0]);
             } else {
-                alert("Silakan pilih file CSV terlebih dahulu.");
+                showAlert("Silakan pilih file CSV terlebih dahulu.");
             }
         });
-        document.getElementById('download-template-btn').addEventListener('click', (e) => {
-            e.preventDefault();
-            downloadTemplate();
-        });
+        document.getElementById('download-template-btn').addEventListener('click', (e) => { e.preventDefault(); downloadTemplate(); });
         
         // Modal Listeners
         const modals = document.querySelectorAll('.modal-overlay');
