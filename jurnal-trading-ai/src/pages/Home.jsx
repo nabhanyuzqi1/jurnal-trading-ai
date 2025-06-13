@@ -1,78 +1,120 @@
 import React from 'react';
-import { ArrowTrendingUpIcon, ArrowTrendingDownIcon } from '@heroicons/react/24/outline';
-import { useAuth } from '../contexts/AuthContext';
-import { useTheme } from '../contexts/ThemeContext';
+import { useTrades } from '../contexts/TradeContext';
+import { useAccounts } from '../contexts/AccountContext';
+import AccountManager from '../components/account/AccountManager';
+import PerformanceCharts from '../components/analytics/PerformanceCharts';
+import MarketWatch from '../components/market/MarketWatch';
+import NewsSection from '../components/news/NewsSection';
+import LoadingSpinner from '../components/shared/LoadingSpinner';
 
 const Home = () => {
-  const { user } = useAuth();
-  const { darkMode } = useTheme();
-  // Mock data - replace with real data from Firebase
-  const recentTrades = [
-    { id: 1, pair: 'EUR/USD', type: 'BUY', profit: 120.50, date: '2024-01-15' },
-    { id: 2, pair: 'BTC/USD', type: 'SELL', profit: -45.20, date: '2024-01-14' },
-    { id: 3, pair: 'GBP/JPY', type: 'BUY', profit: 67.80, date: '2024-01-13' },
-  ];
+  const { trades, loading: tradesLoading } = useTrades();
+  const { activeAccount, loading: accountLoading } = useAccounts();
 
-  const stats = {
-    winRate: '65%',
-    totalTrades: 150,
-    profitFactor: 1.8,
-    netProfit: 2450.75
+  if (accountLoading || tradesLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <LoadingSpinner size="lg" />
+      </div>
+    );
+  }
+
+  // Quick stats calculation
+  const getQuickStats = () => {
+    if (!trades.length || !activeAccount) return null;
+
+    const actualTrades = trades.filter(t => t.pair !== 'WITHDRAWAL');
+    const wins = actualTrades.filter(t => t.pl > 0).length;
+    const totalPL = trades.reduce((sum, t) => sum + t.pl, 0);
+    const startBalance = activeAccount.startBalance;
+    const currentBalance = startBalance + totalPL;
+    const profitPercentage = ((currentBalance - startBalance) / startBalance) * 100;
+
+    return {
+      totalTrades: actualTrades.length,
+      winRate: actualTrades.length ? (wins / actualTrades.length) * 100 : 0,
+      profitLoss: totalPL,
+      profitPercentage,
+      currentBalance
+    };
   };
 
+  const stats = getQuickStats();
+
   return (
-    <div className="max-w-screen-xl mx-auto px-4 py-6">
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Trading Dashboard</h1>
-        <p className="text-gray-600 dark:text-gray-400">Welcome back, {user?.email?.split('@')[0] || 'Trader'}</p>
-      </div>
+    <div className="space-y-8">
+      {/* Account Section */}
+      <section>
+        <h2 className="text-2xl font-bold mb-4">Trading Accounts</h2>
+        <AccountManager />
+      </section>
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-2 gap-4 mb-8">
-        <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
-          <p className="text-sm text-gray-600 dark:text-gray-400">Win Rate</p>
-          <p className="text-xl font-bold text-gray-900 dark:text-white">{stats.winRate}</p>
-        </div>
-        <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
-          <p className="text-sm text-gray-600 dark:text-gray-400">Total Trades</p>
-          <p className="text-xl font-bold text-gray-900 dark:text-white">{stats.totalTrades}</p>
-        </div>
-        <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
-          <p className="text-sm text-gray-600 dark:text-gray-400">Profit Factor</p>
-          <p className="text-xl font-bold text-gray-900 dark:text-white">{stats.profitFactor}</p>
-        </div>
-        <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
-          <p className="text-sm text-gray-600 dark:text-gray-400">Net Profit</p>
-          <p className="text-xl font-bold text-gray-900 dark:text-white">${stats.netProfit}</p>
-        </div>
-      </div>
+      {/* Quick Stats */}
+      {stats && (
+        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="bg-white rounded-lg shadow p-6">
+            <h3 className="text-sm font-medium text-gray-500">Current Balance</h3>
+            <p className="mt-2 text-3xl font-bold text-gray-900">
+              {activeAccount.currency} {stats.currentBalance.toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+              })}
+            </p>
+            <p className={`mt-2 ${stats.profitPercentage >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+              {stats.profitPercentage >= 0 ? '↑' : '↓'} {Math.abs(stats.profitPercentage).toFixed(2)}%
+            </p>
+          </div>
 
-      {/* Recent Trades */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
-        <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Recent Trades</h2>
-        </div>
-        <div className="divide-y divide-gray-200 dark:divide-gray-700">
-          {recentTrades.map((trade) => (
-            <div key={trade.id} className="p-4 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-              <div>
-                <p className="font-medium text-gray-900 dark:text-white">{trade.pair}</p>
-                <p className="text-sm text-gray-600 dark:text-gray-400">{trade.date}</p>
-              </div>
-              <div className="flex items-center">
-                {trade.profit > 0 ? (
-                  <ArrowTrendingUpIcon className="w-5 h-5 text-green-500 mr-2" />
-                ) : (
-                  <ArrowTrendingDownIcon className="w-5 h-5 text-red-500 mr-2" />
-                )}
-                <span className={trade.profit > 0 ? 'text-green-600' : 'text-red-600'}>
-                  ${Math.abs(trade.profit).toFixed(2)}
-                </span>
-              </div>
-            </div>
-          ))}
-        </div>
+          <div className="bg-white rounded-lg shadow p-6">
+            <h3 className="text-sm font-medium text-gray-500">Total P/L</h3>
+            <p className={`mt-2 text-3xl font-bold ${stats.profitLoss >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+              {stats.profitLoss >= 0 ? '+' : ''}{stats.profitLoss.toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+              })}
+            </p>
+            <p className="mt-2 text-gray-600">{activeAccount.currency}</p>
+          </div>
+
+          <div className="bg-white rounded-lg shadow p-6">
+            <h3 className="text-sm font-medium text-gray-500">Win Rate</h3>
+            <p className="mt-2 text-3xl font-bold text-gray-900">
+              {stats.winRate.toFixed(1)}%
+            </p>
+            <p className="mt-2 text-gray-600">{stats.totalTrades} total trades</p>
+          </div>
+
+          <div className="bg-white rounded-lg shadow p-6">
+            <h3 className="text-sm font-medium text-gray-500">Today's Trades</h3>
+            <p className="mt-2 text-3xl font-bold text-gray-900">
+              {trades.filter(t => 
+                t.createdAt?.toDate().toDateString() === new Date().toDateString()
+              ).length}
+            </p>
+            <p className="mt-2 text-gray-600">
+              {new Date().toLocaleDateString()}
+            </p>
+          </div>
+        </section>
+      )}
+
+      {/* Performance Charts */}
+      <section>
+        <h2 className="text-2xl font-bold mb-4">Performance Overview</h2>
+        <PerformanceCharts />
+      </section>
+
+      {/* Market Overview */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <section>
+          <h2 className="text-2xl font-bold mb-4">Market Watch</h2>
+          <MarketWatch />
+        </section>
+
+        <section>
+          <h2 className="text-2xl font-bold mb-4">Latest News</h2>
+          <NewsSection />
+        </section>
       </div>
     </div>
   );

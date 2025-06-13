@@ -2,6 +2,9 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
+import { AccountProvider } from './contexts/AccountContext';
+import { TradeProvider } from './contexts/TradeContext';
+import { AnalyticsProvider } from './contexts/AnalyticsContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Layout from './components/Layout/Layout';
 import Login from './pages/Login';
@@ -15,27 +18,33 @@ function App() {
   return (
     <AuthProvider>
       <ThemeProvider>
-        <Router>
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route
-              path="/"
-              element={
-                <ProtectedRoute>
-                  <Layout>
-                    <Routes>
-                      <Route index element={<Home />} />
-                      <Route path="/journal" element={<Journal />} />
-                      <Route path="/analysis" element={<Analysis />} />
-                      <Route path="/news" element={<News />} />
-                      <Route path="/calculator" element={<Calculator />} />
-                    </Routes>
-                  </Layout>
-                </ProtectedRoute>
-              }
-            />
-          </Routes>
-        </Router>
+        <AccountProvider>
+          <TradeProvider>
+            <AnalyticsProvider>
+              <Router>
+                <Routes>
+                  <Route path="/login" element={<Login />} />
+                  <Route
+                    path="/"
+                    element={
+                      <ProtectedRoute>
+                        <Layout>
+                          <Routes>
+                            <Route index element={<Home />} />
+                            <Route path="/journal" element={<Journal />} />
+                            <Route path="/analysis" element={<Analysis />} />
+                            <Route path="/news" element={<News />} />
+                            <Route path="/calculator" element={<Calculator />} />
+                          </Routes>
+                        </Layout>
+                      </ProtectedRoute>
+                    }
+                  />
+                </Routes>
+              </Router>
+            </AnalyticsProvider>
+          </TradeProvider>
+        </AccountProvider>
       </ThemeProvider>
     </AuthProvider>
   );

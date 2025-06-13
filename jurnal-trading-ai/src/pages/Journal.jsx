@@ -1,35 +1,30 @@
-import React, { useState, useEffect } from 'react';
-import { useAuth } from '../contexts/AuthContext';
-import { useTheme } from '../contexts/ThemeContext';
+import React, { useState } from 'react';
+import { useAccounts } from '../contexts/AccountContext';
 import { journalService } from '../services/journalService';
 import { ArrowUpTrayIcon, ArrowDownTrayIcon } from '@heroicons/react/24/outline';
+import TradeForm from '../components/trade/TradeForm';
+import TradeList from '../components/trade/TradeList';
+import Modal from '../components/shared/Modal';
+import Alert from '../components/shared/Alert';
+import AIAnalysis from '../components/analytics/AIAnalysis';
 
 const Journal = () => {
-  const { user } = useAuth();
-  useTheme(); // Keep the theme context for dark mode classes
-  const [trades, setTrades] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { activeAccount } = useAccounts();
+  const [showTradeForm, setShowTradeForm] = useState(false);
+  const [alert, setAlert] = useState(null);
+  const [activeTab, setActiveTab] = useState('trades'); // 'trades' or 'analysis'
 
-  const loadTrades = React.useCallback(async () => {
-    try {
-      if (user) {
-        const userTrades = await journalService.getUserTrades(user.uid);
-        setTrades(userTrades);
-      }
-    } catch (err) {
-      setError('Failed to load trades');
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  }, [user]);
-
-  useEffect(() => {
-    loadTrades();
-  }, [loadTrades]);
+  const showAlert = (message, type = 'success') => {
+    setAlert({ message, type });
+    setTimeout(() => setAlert(null), 3000);
+  };
 
   const handleFileUpload = async (event) => {
+    if (!activeAccount) {
+      showAlert('Please select an account first', 'error');
+      return;
+    }
+
     const file = event.target.files[0];
     if (file) {
       try {
@@ -40,11 +35,10 @@ const Journal = () => {
           
           // Upload each trade to Firebase
           for (const trade of parsedTrades) {
-            await journalService.addTrade(user.uid, trade);
+            await journalService.addTrade(activeAccount.id, trade);
           }
           
-          // Reload trades
-          await loadTrades();
+          showAlert('Trades imported successfully');
         };
         reader.readAsText(file);
       } catch (err) {
@@ -56,7 +50,7 @@ const Journal = () => {
 
   const handleExport = () => {
     try {
-      const csvContent = journalService.generateCSV(trades);
+      const csvContent = journalService.generateCSV(activeAccount.id);
       journalService.downloadCSV(csvContent);
     } catch (err) {
       setError('Failed to export trades');
@@ -64,19 +58,31 @@ const Journal = () => {
     }
   };
 
-  if (loading) {
+  if (!activeAccount) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      <div className="text-center py-8">
+        <p className="text-gray-600">Please select an account to view your trading journal.</p>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-6 flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Trading Journal</h1>
+    <div className="space-y-6">
+      {/* Header Section */}
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-2xl font-bold">Trading Journal</h1>
+          <p className="text-gray-600">
+            Account: {activeAccount.name} ({activeAccount.currency})
+          </p>
+        </div>
         <div className="flex gap-4">
+          <button
+            onClick={() => setShowTradeForm(true)}
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Add Trade
+          </button>
           <div className="flex flex-col gap-2">
             {/* Import Button */}
             <div className="relative">
@@ -107,8 +113,7 @@ const Journal = () => {
           {/* Export Button */}
           <button
             onClick={handleExport}
-            disabled={trades.length === 0}
-            className="flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
           >
             <ArrowDownTrayIcon className="h-5 w-5" />
             Export CSV
@@ -122,80 +127,68 @@ const Journal = () => {
         </div>
       )}
 
-      {/* Trades Table */}
-      <div className="overflow-x-auto bg-white dark:bg-gray-800 rounded-lg shadow">
-        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-          <thead className="bg-gray-50 dark:bg-gray-700">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                Time
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                Symbol
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                Type
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                Volume
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                Entry Price
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                Exit Price
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                Profit
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-            {trades.map((trade) => (
-              <tr key={trade.position} className="hover:bg-gray-50 dark:hover:bg-gray-700">
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">
-                  {trade.time}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">
-                  {trade.symbol}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm">
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium
-                    ${trade.type.toLowerCase() === 'buy' 
-                      ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
-                      : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'
-                    }`}>
-                    {trade.type}
-                  </span>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">
-                  {trade.volume}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">
-                  {trade.prive}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">
-                  {trade['prive.1']}
-                </td>
-                <td className={`px-6 py-4 whitespace-nowrap text-sm font-medium
-                  ${Number(trade.profit) >= 0 
-                    ? 'text-green-600 dark:text-green-400'
-                    : 'text-red-600 dark:text-red-400'
-                  }`}>
-                  {Number(trade.profit).toFixed(2)}
-                </td>
-              </tr>
-            ))}
-            {trades.length === 0 && (
-              <tr>
-                <td colSpan="7" className="px-6 py-4 text-center text-gray-500 dark:text-gray-400">
-                  No trades found. Import your trades using the CSV button above.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+      {/* Tab Navigation */}
+      <div className="border-b border-gray-200">
+        <nav className="-mb-px flex space-x-8">
+          <button
+            onClick={() => setActiveTab('trades')}
+            className={`
+              py-4 px-1 border-b-2 font-medium text-sm
+              ${activeTab === 'trades'
+                ? 'border-blue-500 text-blue-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }
+            `}
+          >
+            Trade History
+          </button>
+          <button
+            onClick={() => setActiveTab('analysis')}
+            className={`
+              py-4 px-1 border-b-2 font-medium text-sm
+              ${activeTab === 'analysis'
+                ? 'border-blue-500 text-blue-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }
+            `}
+          >
+            AI Analysis
+          </button>
+        </nav>
       </div>
+
+      {/* Content Section */}
+      <div className="min-h-[500px]">
+        {activeTab === 'trades' ? (
+          <TradeList />
+        ) : (
+          <AIAnalysis />
+        )}
+      </div>
+
+      {/* Add Trade Modal */}
+      <Modal
+        isOpen={showTradeForm}
+        onClose={() => setShowTradeForm(false)}
+        title="Add New Trade"
+      >
+        <TradeForm
+          onCancel={() => setShowTradeForm(false)}
+          onSuccess={() => {
+            setShowTradeForm(false);
+            showAlert('Trade added successfully');
+          }}
+        />
+      </Modal>
+
+      {/* Alert */}
+      {alert && (
+        <Alert
+          message={alert.message}
+          type={alert.type}
+          onClose={() => setAlert(null)}
+        />
+      )}
     </div>
   );
 };
