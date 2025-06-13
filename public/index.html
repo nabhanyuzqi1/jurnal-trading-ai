@@ -1324,24 +1324,40 @@ Gunakan format HTML yang jelas.`;
                 });
                 }
             } else if (mode === 'metatrader5') {
-                // Find column indexes
-                const idx = {};
-                headers.forEach((h, i) => { idx[h] = i; });
+                // Find column indexes with flexible matching
+                function findHeader(possibles) {
+                    for (const p of possibles) {
+                        const idx = headers.findIndex(h => h.replace(/\s/g, '') === p.replace(/\s/g, ''));
+                        if (idx !== -1) return idx;
+                    }
+                    return -1;
+                }
+                const idxSymbol = findHeader(['symbol', 'pair']);
+                const idxType = findHeader(['type', 'position']);
+                const idxProfit = findHeader(['profit']);
+                const idxVolume = findHeader(['volume', 'size', 'lots']);
+                const idxTime = findHeader(['time', 'open time', 'open', 'open_time']);
+
                 for (let i = 1; i < rows.length; i++) {
-                const cols = rows[i].match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
-                if (!cols || !cols[idx['symbol']] || !cols[idx['profit']]) continue;
-                // Only import buy/sell trades (skip balance, credit, etc)
-                const type = (cols[idx['type']] || '').toLowerCase();
-                if (type !== 'buy' && type !== 'sell') continue;
-                trades.push({
-                    pair: cols[idx['symbol']].replace(/"/g, '').toUpperCase(),
-                    lotSize: parseFloat(cols[idx['volume']]),
-                    strategy: '', // MT5 CSV does not have strategy/comment
-                    position: type,
-                    pl: parseFloat(cols[idx['profit']]),
-                    notes: '', // MT5 CSV does not have notes/comment
-                    createdAt: new Date(cols[idx['time']] || Date.now())
-                });
+                    const cols = rows[i].match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
+                    if (!cols) continue;
+                    if (
+                        idxSymbol === -1 || idxType === -1 || idxProfit === -1 ||
+                        idxVolume === -1 || idxTime === -1
+                    ) continue;
+                    if (!cols[idxSymbol] || !cols[idxProfit]) continue;
+                    // Only import buy/sell trades (skip balance, credit, etc)
+                    const type = (cols[idxType] || '').toLowerCase();
+                    if (type !== 'buy' && type !== 'sell') continue;
+                    trades.push({
+                        pair: cols[idxSymbol].replace(/"/g, '').toUpperCase(),
+                        lotSize: parseFloat(cols[idxVolume]),
+                        strategy: '', // MT5 CSV does not have strategy/comment
+                        position: type,
+                        pl: parseFloat(cols[idxProfit]),
+                        notes: '', // MT5 CSV does not have notes/comment
+                        createdAt: new Date(cols[idxTime] || Date.now())
+                    });
                 }
             }
 
