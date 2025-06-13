@@ -241,6 +241,13 @@
                  </script>
                </div>
                <!-- TradingView Widget END -->
+
+               <div class="card mt-6">
+                    <h2 class="text-xl font-bold mb-4">Alternatif Chart Live (Investing.com)</h2>
+                      <iframe src="https://www.investing.com/charts/forex-charts" width="100%" height="500" frameborder="0" allowfullscreen></iframe>
+                    <p class="text-xs text-gray-500 mt-2">Catatan: Chart Investing.com dilengkapi berita & live price. Cocok untuk alternatif jika TradingView tidak memuat atau butuh referensi lain.</p>
+                </div>
+
            </div>
        </div>
 
@@ -419,7 +426,23 @@
     <!-- Modals -->
     <div id="mindset-modal" class="modal-overlay hidden"><div class="modal-content"><span class="modal-close-btn modal-close">&times;</span><h2 class="text-2xl font-bold mb-4">✨ Analisis Mindset AI</h2><div id="mindset-modal-body"></div></div></div>
     <div id="donation-modal" class="modal-overlay hidden"><div class="modal-content text-center"><span class="modal-close-btn modal-close">&times;</span><h2 class="text-2xl font-bold mb-4">Donasi untuk Kreator</h2><p class="mb-4 text-gray-600">Terima kasih telah menggunakan aplikasi ini. Dukung Nabhan melalui BCA.</p><div class="p-4 bg-blue-50 rounded-lg"><p class="font-semibold text-lg">Bank Central Asia (BCA)</p><p class="text-2xl font-bold text-blue-600 my-2">6695673021</p><p class="font-semibold">a/n Nabhan Yuzqi Al Mubarok</p></div></div></div>
-    <div id="education-modal" class="modal-overlay hidden"><div class="modal-content text-left"><span class="modal-close-btn modal-close">&times;</span><h2 class="text-2xl font-bold mb-4">Panduan Aplikasi Jurnal Trading</h2><div class="text-sm space-y-3 max-h-[60vh] overflow-y-auto pr-2"><p><strong>1. Halaman Akun:</strong> Mulai dari sini! Buat akun trading pertama Anda. Anda bisa memiliki banyak akun (misal: Akun Real, Akun Lomba, dll). Semua data terpisah per akun.</p><p><strong>2. Halaman Jurnal:</strong> Setelah memilih akun aktif, catat setiap trade Anda di sini. Gunakan dropdown untuk mempercepat input Pair dan Strategi. Data akan tersimpan otomatis.</p><p><strong>3. Halaman Analisa:</strong> Lihat performa trading Anda. Kurva ekuitas akan menunjukkan pertumbuhan modal Anda. Analisis AI akan memberikan masukan setelah Anda memiliki beberapa data trade.</p><p><strong>4. Halaman Berita:</strong> Dapatkan berita pasar terbaru dari sumber terpercaya. Masukkan pair yang Anda pantau untuk mendapatkan outlook dari AI berdasarkan berita terkini.</p><p><strong>5. Kalkulator Risiko:</strong> Di halaman 'Akun', gunakan kalkulator untuk menentukan lot size yang aman sesuai toleransi risiko Anda sebelum membuka posisi.</p></div></div></div>
+
+    <div id="education-modal" class="modal-overlay hidden">
+        <div class="modal-content text-left">
+            <span class="modal-close-btn modal-close">&times;</span>
+            <h2 class="text-2xl font-bold mb-4">Panduan Aplikasi Jurnal Trading</h2>
+            <div class="text-sm space-y-3 max-h-[60vh] overflow-y-auto pr-2">
+            <p><strong>1. Halaman Akun:</strong> Buat akun trading pertama Anda. Bisa untuk akun USD maupun Cent — sistem menghitung lot size dengan rumus yang sama karena nilai uang setara (contoh: 1000 USD = 100.000 cent).</p>
+            <p><strong>2. Kalkulator Risiko:</strong> Tersedia di halaman 'Akun'. Tentukan lot size yang aman sesuai risiko dan stop loss. Kalkulator memperhitungkan mata uang akun secara otomatis.</p>
+            <p><strong>3. Halaman Jurnal:</strong> Setelah memilih akun aktif, catat setiap trade Anda di sini. Gunakan dropdown untuk mempercepat input Pair dan Strategi.</p>
+            <p><strong>4. Halaman Analisa:</strong> Lihat performa trading Anda: kurva ekuitas, win rate, dan analisis AI.</p>
+            <p><strong>5. Halaman Watchlist Pasar:</strong> Pantau pergerakan harga melalui grafik interaktif dari TradingView dan Investing.com (dua sumber tersedia untuk kenyamanan dan kelengkapan).</p>
+            <p><strong>6. Halaman Berita:</strong> Dapatkan berita pasar. Jika berita dari MyFxBook/Forex Factory gagal dimuat (karena keterbatasan sumber), silakan kunjungi langsung situs tersebut atau pantau berita lewat grafik live di halaman Pasar.</p>
+            </div>
+        </div>
+    </div>
+
+
     <div id="import-modal" class="modal-overlay hidden"><div class="modal-content text-center"><span class="modal-close-btn modal-close">&times;</span><h2 class="text-2xl font-bold mb-4">Impor Riwayat Trade</h2><p class="mb-4 text-gray-600">Unggah file CSV dari MetaTrader atau gunakan template kami.</p><input type="file" id="csv-file-input" accept=".csv" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 mb-4"/><button id="process-import-btn" class="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 mb-4">Proses Impor</button><a id="download-template-btn" href="#" class="text-sm text-blue-600 hover:underline">Download Template CSV</a><div id="import-status" class="mt-4 text-sm"></div></div></div>
     <div id="withdrawal-modal" class="modal-overlay hidden">
         <div class="modal-content">
@@ -1035,24 +1058,18 @@
             if (isNaN(slPips) || isNaN(riskPercent) || slPips <= 0 || riskPercent <= 0) return;
 
             const riskAmount = currentBalance * (riskPercent / 100);
-            const pipValuePerStandardLotUSD = 10;
-            
-            let recommendedLotSize; // in Standard Lots
+            const pipValuePerLot = 10; // $10 per pip per 1 lot (standard), berlaku juga untuk cent
+
+            const valuePerPip = riskAmount / slPips;
+            const recommendedLotSize = valuePerPip / pipValuePerLot;
+
             let lotDisplay;
-            
             if (activeAccount.currency === 'cent') {
-                const riskAmountCents = riskAmount;
-                const pipValuePerCentLotCents = 10;
-                const valuePerPipCents = riskAmountCents / slPips;
-                recommendedLotSize = valuePerPipCents / pipValuePerCentLotCents;
-                lotDisplay = recommendedLotSize.toFixed(2) + ' (Cent Lot)';
-            } else { // USD Account
-                const riskAmountUSD = riskAmount;
-                const valuePerPipUSD = riskAmountUSD / slPips;
-                recommendedLotSize = valuePerPipUSD / pipValuePerStandardLotUSD;
-                lotDisplay = recommendedLotSize.toFixed(2) + ' (Std Lot)';
+            lotDisplay = recommendedLotSize.toFixed(2) + ' (Cent Lot)';
+            } else {
+            lotDisplay = recommendedLotSize.toFixed(2) + ' (Std Lot)';
             }
-            
+
             const riskDisplay = activeAccount.currency === 'cent' ? `${riskAmount.toFixed(2)} sen` : `$${riskAmount.toFixed(2)}`;
 
             document.getElementById('lot-size-result').textContent = lotDisplay;
@@ -1131,33 +1148,17 @@ Gunakan format HTML yang jelas.`;
         }
         
         async function fetchForexFactoryNews() {
-            ui.forexFactoryCalendar.innerHTML = '<div class="loader"></div>';
-            const RSS_TO_JSON_API = "https://api.rss2json.com/v1/api.json?rss_url=";
-            const FF_URL = encodeURIComponent("https://www.forexfactory.com/ff_calendar_thisweek.xml");
-
-            try {
-                const response = await fetch(RSS_TO_JSON_API + FF_URL);
-                if(!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                const data = await response.json();
-                if (data.status !== 'ok') throw new Error('Gagal mengambil data kalender dari API.');
-                
-                let html = data.items.map(item => {
-                    const impactClass = item.title.includes('High') ? 'impact-High' : item.title.includes('Medium') ? 'impact-Medium' : 'impact-Low';
-                    return `
-                        <div class="p-2 border-b border-gray-200 flex items-center text-sm">
-                            <span class="font-bold w-16 ${impactClass}">${item.title.split(' ')[0]}</span>
-                            <div class="flex-grow pl-2">
-                                <p>${item.title.substring(item.title.indexOf(' ') + 1)}</p>
-                                <p class="text-xs text-gray-500">${new Date(item.pubDate).toLocaleString('id-ID')}</p>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-                ui.forexFactoryCalendar.innerHTML = html;
-            } catch(error) {
-                ui.forexFactoryCalendar.innerHTML = `<p class="text-red-500">Gagal memuat kalender ekonomi.</p>`;
-                console.error("Error fetching Forex Factory news:", error);
-            }
+            // Forex Factory RSS feed is no longer supported.
+            // Embed the official Forex Factory calendar widget as a fallback.
+            ui.forexFactoryCalendar.innerHTML = `
+                <iframe src="https://www.forexfactory.com/calendar.php" 
+                    width="100%" height="400" frameborder="0" 
+                    style="border:0; min-height:400px; background:white;"
+                    title="Forex Factory Economic Calendar"></iframe>
+                <p class="text-xs text-gray-500 mt-2">
+                    Kalender ekonomi di-embed langsung dari ForexFactory.com. Jika tidak tampil, silakan kunjungi situs resmi.
+                </p>
+            `;
         }
         
         function handleAiNewsRequest() {
