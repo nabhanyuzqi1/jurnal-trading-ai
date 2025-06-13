@@ -1283,88 +1283,89 @@ Gunakan format HTML yang jelas.`;
         async function processCSVImport(file) {
             const reader = new FileReader();
             reader.onload = async function(e) {
-                const text = e.target.result;
-                const rows = text.split('\n').map(row => row.trim()).filter(row => row.length > 0);
-                if (rows.length < 2) {
-                    showAlert("File CSV tidak valid atau kosong.");
-                    return;
-                }
-                // Try to detect header type
-                const headers = rows[0].split(',').map(h => h.trim().toLowerCase());
-                let mode = 'template';
-                // MetaTrader 4/5 history headers (common: "ticket,open time,type,size,symbol,price,sl,tp,close time,price,commission,taxes,swap,profit,comment")
-                if (
-                    headers.includes('ticket') && headers.includes('symbol') && headers.includes('profit')
-                ) {
-                    mode = 'metatrader';
-                } else if (
-                    headers.join(',') === "pair,lotSize,strategy,position,profit,notes,date".toLowerCase()
-                ) {
-                    mode = 'template';
-                } else {
-                    showAlert("Format CSV tidak dikenali. Gunakan template atau file history MetaTrader.");
-                    return;
-                }
+            const text = e.target.result;
+            const rows = text.split('\n').map(row => row.trim()).filter(row => row.length > 0);
+            if (rows.length < 2) {
+                showAlert("File CSV tidak valid atau kosong.");
+                return;
+            }
+            // Try to detect header type
+            const headers = rows[0].split(',').map(h => h.trim().toLowerCase());
+            let mode = 'template';
+            // MetaTrader 4/5 history headers (common: "ticket,open time,type,size,symbol,price,sl,tp,close time,price,commission,taxes,swap,profit,comment")
+            // MT5 CSV: Time,Position,Symbol,Type,Volume,Price,S / L,T / P,Time,Price,Commission,Swap,Profit
+            if (
+                headers.includes('symbol') && headers.includes('type') && headers.includes('profit')
+            ) {
+                mode = 'metatrader5';
+            } else if (
+                headers.join(',') === "pair,lotSize,strategy,position,profit,notes,date".toLowerCase()
+            ) {
+                mode = 'template';
+            } else {
+                showAlert("Format CSV tidak dikenali. Gunakan template atau file history MetaTrader.");
+                return;
+            }
 
-                let trades = [];
-                if (mode === 'template') {
-                    for (let i = 1; i < rows.length; i++) {
-                        // Handle quoted commas
-                        const cols = rows[i].match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
-                        if (!cols || cols.length < 7) continue;
-                        trades.push({
-                            pair: cols[0].replace(/"/g, '').toUpperCase(),
-                            lotSize: parseFloat(cols[1]),
-                            strategy: cols[2].replace(/"/g, ''),
-                            position: cols[3],
-                            pl: parseFloat(cols[4]),
-                            notes: cols[5].replace(/"/g, ''),
-                            createdAt: new Date(cols[6])
-                        });
-                    }
-                } else if (mode === 'metatrader') {
-                    // Find column indexes
-                    const idx = {};
-                    headers.forEach((h, i) => { idx[h] = i; });
-                    for (let i = 1; i < rows.length; i++) {
-                        const cols = rows[i].match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
-                        if (!cols || !cols[idx['symbol']] || !cols[idx['profit']]) continue;
-                        // Only import buy/sell trades (skip balance, credit, etc)
-                        const type = (cols[idx['type']] || '').toLowerCase();
-                        if (type !== 'buy' && type !== 'sell') continue;
-                        trades.push({
-                            pair: cols[idx['symbol']].replace(/"/g, '').toUpperCase(),
-                            lotSize: parseFloat(cols[idx['size']]),
-                            strategy: cols[idx['comment']] ? cols[idx['comment']].replace(/"/g, '') : '',
-                            position: type,
-                            pl: parseFloat(cols[idx['profit']]),
-                            notes: cols[idx['comment']] ? cols[idx['comment']].replace(/"/g, '') : '',
-                            createdAt: new Date(cols[idx['open time']] || cols[idx['close time']] || Date.now())
-                        });
-                    }
+            let trades = [];
+            if (mode === 'template') {
+                for (let i = 1; i < rows.length; i++) {
+                // Handle quoted commas
+                const cols = rows[i].match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
+                if (!cols || cols.length < 7) continue;
+                trades.push({
+                    pair: cols[0].replace(/"/g, '').toUpperCase(),
+                    lotSize: parseFloat(cols[1]),
+                    strategy: cols[2].replace(/"/g, ''),
+                    position: cols[3],
+                    pl: parseFloat(cols[4]),
+                    notes: cols[5].replace(/"/g, ''),
+                    createdAt: new Date(cols[6])
+                });
                 }
+            } else if (mode === 'metatrader5') {
+                // Find column indexes
+                const idx = {};
+                headers.forEach((h, i) => { idx[h] = i; });
+                for (let i = 1; i < rows.length; i++) {
+                const cols = rows[i].match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
+                if (!cols || !cols[idx['symbol']] || !cols[idx['profit']]) continue;
+                // Only import buy/sell trades (skip balance, credit, etc)
+                const type = (cols[idx['type']] || '').toLowerCase();
+                if (type !== 'buy' && type !== 'sell') continue;
+                trades.push({
+                    pair: cols[idx['symbol']].replace(/"/g, '').toUpperCase(),
+                    lotSize: parseFloat(cols[idx['volume']]),
+                    strategy: '', // MT5 CSV does not have strategy/comment
+                    position: type,
+                    pl: parseFloat(cols[idx['profit']]),
+                    notes: '', // MT5 CSV does not have notes/comment
+                    createdAt: new Date(cols[idx['time']] || Date.now())
+                });
+                }
+            }
 
-                if (!activeAccountId || !auth.currentUser) {
-                    showAlert("Pilih akun aktif terlebih dahulu.");
-                    return;
+            if (!activeAccountId || !auth.currentUser) {
+                showAlert("Pilih akun aktif terlebih dahulu.");
+                return;
+            }
+            if (trades.length === 0) {
+                showAlert("Tidak ada trade valid yang ditemukan di file.");
+                return;
+            }
+            const tradesPath = `users/${auth.currentUser.uid}/accounts/${activeAccountId}/trades`;
+            try {
+                for (const trade of trades) {
+                await addDoc(collection(db, tradesPath), {
+                    ...trade,
+                    createdAt: trade.createdAt instanceof Date && !isNaN(trade.createdAt) ? trade.createdAt : serverTimestamp()
+                });
                 }
-                if (trades.length === 0) {
-                    showAlert("Tidak ada trade valid yang ditemukan di file.");
-                    return;
-                }
-                const tradesPath = `users/${auth.currentUser.uid}/accounts/${activeAccountId}/trades`;
-                try {
-                    for (const trade of trades) {
-                        await addDoc(collection(db, tradesPath), {
-                            ...trade,
-                            createdAt: trade.createdAt instanceof Date && !isNaN(trade.createdAt) ? trade.createdAt : serverTimestamp()
-                        });
-                    }
-                    showAlert("Impor CSV berhasil!", "success");
-                    ui.importModal.classList.add('hidden');
-                } catch (error) {
-                    showAlert("Gagal impor data: " + error.message);
-                }
+                showAlert("Impor CSV berhasil!", "success");
+                ui.importModal.classList.add('hidden');
+            } catch (error) {
+                showAlert("Gagal impor data: " + error.message);
+            }
             };
             reader.readAsText(file);
         }
